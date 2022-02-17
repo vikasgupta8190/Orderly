@@ -1,0 +1,28 @@
+﻿@using Orderly
+@using Orderly.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Orderly.Models.User
+@using Orderly.Models.Portfolio
+@using Orderly.Models.Enums
+@using Orderly.Models.Comman
+@using Orderly.Models.Contact
+@using Orderly.Models.Investment
+@using System.Net
+@using System.Text.Encodings.Web
+@using System.Globalization
+@using Orderly.Helpers
+@using Orderly.Services.Contact
+@using Orderly.Models.Distributor
+@using Orderly.Models.Tokens
+@using Orderly.Models.Analyzer
+@using Orderly.Models.Monitor
+@using Orderly.Core.Domain.Portfolio
+@using Orderly.Models.Calendar
+@using Orderly.Models.Dashboard
+@using Orderly.Models.OTC
+
+@using System.Web
+@inject IApplicationUser _appUser
+@using Orderly.Services.User
+@inherits Orderly.Helpers.OrderlyRazorPage<TModel>

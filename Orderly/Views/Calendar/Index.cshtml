@@ -1,0 +1,244 @@
+﻿@model CalendarSearchModel
+@{
+    ViewBag.Title = "Investment Manager";
+    Layout = "~/Views/Shared/_AuthorizeLayout.cshtml";
+}
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications") 
+<div class="container cus_container">
+    <div class="upper_heading">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h4 class="common_heading">Calendar</h4>
+            </div>
+            <div class="col-md-6">
+                <ul class="nav nav-pills cus_pills calender_pills"
+                    id="pills-tab"
+                    role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                            All
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                            Upcoming Token
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            Ongoing Token
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="tab-content cus_tab_content" id="pills-tabContent">
+        <div class="tab-pane fade show active"
+             id="pills-home"
+             role="tabpanel"
+             aria-labelledby="pills-home-tab">
+            <div class="calender_content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="token_table table_bg calender_table" id="table_contacts">
+                            <div class="table-responsive">
+                                @Html.AntiForgeryToken()
+                                @await Html.PartialAsync("GridTable", new DataTablesModel()
+                           {
+                               Name = "ongoing-calendar-grid",
+                               UrlRead = Url.RouteUrl("GetCalendar"),
+                               Length = OrderlyDefaults.GridDefaultPageSize,
+                               LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                               Filters = new List<FilterParameter>()
+                                         {
+                                             new FilterParameter(nameof(Model.ListType))
+                                         },
+                               ColumnCollection = new List<ColumnProperty>()
+                               {
+                                   new ColumnProperty("networkType")
+                                   {
+                                       Title = T("OngoingToken").Value,
+                                       Width = "50",
+                                       Render= new RenderCustom("renderToken")
+                                   },
+                                   new ColumnProperty("stage")
+                                   {
+                                       Title = T("Stage").Value,
+                                       Width = "100",
+                                       ClassName="text-start",
+                                   },
+                                   new ColumnProperty("date")
+                                   {
+                                       Title = T("StartIn").Value,
+                                       Width = "100",
+                                       ClassName="text-start",
+                                       Render= new RenderCustom("renderDate")
+                                   },
+                                   new ColumnProperty("goal")
+                                   {
+                                       Title = T("Goal").Value,
+                                       Width = "100",
+                                       ClassName="text-start",
+                                       Render = new RenderCustom("RenderGoals"),
+                                   }
+                               }
+                           })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="token_table table_bg calender_table" id="table_contacts">
+                            <div class="table-responsive">
+                                @Html.AntiForgeryToken()
+                                @await Html.PartialAsync("GridTable", new DataTablesModel()
+                           {
+                               Name = "upcoming-calendar-grid",
+                               UrlRead = Url.RouteUrl("GetUpcomingToken"),
+                               Length = OrderlyDefaults.GridDefaultPageSize,
+                               LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                               Filters = new List<FilterParameter>()
+                                         {
+                                             new FilterParameter(nameof(Model.ListType))
+                                         },
+                               ColumnCollection = new List<ColumnProperty>()
+                               {
+                                   new ColumnProperty("networkType")
+                                   {
+                                       Title = T("UpcomingToken").Value,
+                                       Width = "50",
+                                       Render= new RenderCustom("renderToken")
+                                   },
+                                   new ColumnProperty("goal")
+                                   {
+                                       Title = T("Goal").Value,
+                                       Width = "100",
+                                       ClassName="text-start",
+                                       Render = new RenderCustom("RenderGoals"),
+                                   }
+                               }
+                           })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="calender_content">
+                <div class="col-md-12">
+                    <div class="token_table table_bg calender_table upcoming_tokens_table">
+                        <div class="table-responsive">
+                            @Html.AntiForgeryToken()
+                            @await Html.PartialAsync("GridTable", new DataTablesModel()
+                       {
+                           Name = "upcoming-calendar-grid-indv",
+                           UrlRead = Url.RouteUrl("GetUpcomingToken"),
+                           Length = OrderlyDefaults.GridDefaultPageSize,
+                           LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                           Filters = new List<FilterParameter>()
+                                     {
+                                         new FilterParameter(nameof(Model.ListType))
+                                     },
+                           ColumnCollection = new List<ColumnProperty>()
+                           {
+                               new ColumnProperty("networkType")
+                               {
+                                   Title = T("UpcomingToken").Value,
+                                   Width = "50",
+                                   Render= new RenderCustom("renderToken")
+                               },
+                               new ColumnProperty("goal")
+                               {
+                                   Title = T("Goal").Value,
+                                   Width = "100",
+                                   ClassName="text-start",
+                                   Render = new RenderCustom("RenderGoals"),
+                               }
+                           }
+                       })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+            <div class="calender_content">
+                <div class="col-md-12">
+                    <div class="token_table table_bg calender_table upcoming_tokens_table">
+                        <div class="table-responsive">
+                            @Html.AntiForgeryToken()
+                            @await Html.PartialAsync("GridTable", new DataTablesModel()
+                       {
+                           Name = "ongoing-calendar-grid-indv",
+                           UrlRead = Url.RouteUrl("GetCalendar"),
+                           Length = OrderlyDefaults.GridDefaultPageSize,
+                           LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                           Filters = new List<FilterParameter>()
+                                     {
+                                         new FilterParameter(nameof(Model.ListType))
+                                     },
+                           ColumnCollection = new List<ColumnProperty>()
+                           {
+                               new ColumnProperty("networkType")
+                               {
+                                   Title = T("OngoingToken").Value,
+                                   Width = "50",
+                                   Render= new RenderCustom("renderToken")
+                               },
+                               new ColumnProperty("stage")
+                               {
+                                   Title = T("Stage").Value,
+                                   Width = "100",
+                                   ClassName="text-start",
+                               },
+                               new ColumnProperty("date")
+                               {
+                                   Title = T("StartIn").Value,
+                                   Width = "100",
+                                   ClassName="text-start",
+                                   Render= new RenderCustom("renderDate")
+                               },
+                               new ColumnProperty("goal")
+                               {
+                                   Title = T("Goal").Value,
+                                   Width = "100",
+                                   ClassName="text-start",
+                                   Render = new RenderCustom("RenderGoals"),
+                               }
+                           }
+                       })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function RenderGoals(data, type, row, meta) {
+        var html =
+            '<div class="action-dots">'
+            + '<span>$' + data +'</span>'
+            + '</div>'
+        return html;
+    }
+
+    function renderToken(data, type, row, meta) {
+        var html =
+            '<div class="action-dots">'
+            + '<span>' + row.icon + '</span> '
+            + '<span>' + data + '</span>'
+            + '</div>'
+        return html;
+    }
+
+    function renderDate(data, type, row, meta) {
+        var date = new Date(data);
+        var month = date.getMonth() + 1;
+        var formattedDate = date.getDate() + "." + (month.toString().length > 1 ? month : "0" + month) + "." + date.getFullYear();
+        return formattedDate;
+    }
+</script>

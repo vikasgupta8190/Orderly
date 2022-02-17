@@ -1,0 +1,167 @@
+﻿@model UserInvestmentModel
+@{
+    ViewBag.Title = "Investment Manager";
+    Layout = "~/Views/Shared/_AuthorizeLayout.cshtml";
+}
+
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications") 
+<div class="container cus_container">
+    <div class="upper_heading">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h4 class="common_heading">Investments Manager</h4>
+            </div>
+            <div class="col-md-6">
+                <ul class="all_wallets">
+                    <li class="cus_sort">
+                        Sort:
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.75758 8.45455C7.42286 8.45455 7.15152 8.1832 7.15152 7.84848C7.15152 7.51377 7.42286 7.24242 7.75758 7.24242H11.3939C11.7287 7.24242 12 7.51377 12 7.84848C12 8.1832 11.7287 8.45455 11.3939 8.45455H7.75758ZM7.75758 12.0909C7.42286 12.0909 7.15152 11.8196 7.15152 11.4848C7.15152 11.1501 7.42286 10.8788 7.75758 10.8788H8.9697C9.30441 10.8788 9.57576 11.1501 9.57576 11.4848C9.57576 11.8196 9.30441 12.0909 8.9697 12.0909H7.75758ZM7.75758 4.81818C7.42286 4.81818 7.15152 4.54684 7.15152 4.21212C7.15152 3.8774 7.42286 3.60606 7.75758 3.60606H13.8182C14.1529 3.60606 14.4242 3.8774 14.4242 4.21212C14.4242 4.54684 14.1529 4.81818 13.8182 4.81818H7.75758ZM4.72727 10.8788H6.24242L4.12121 13L2 10.8788H3.51515V3.60606C3.51515 3.27134 3.78649 3 4.12121 3C4.45593 3 4.72727 3.27134 4.72727 3.60606V10.8788Z" fill="#08101F" />
+                        </svg>
+                    </li>
+                    <li class="cus_date">
+                        Date
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.14142 7.54064L7.85861 10.2578C7.93671 10.3359 8.06334 10.3359 8.14145 10.2578L10.8586 7.54064C10.9846 7.41464 10.8954 7.19922 10.7171 7.19922H5.28285C5.10466 7.19922 5.01543 7.41465 5.14142 7.54064Z" fill="#08101F" />
+                        </svg>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="common_btn" data-bs-toggle="modal" data-bs-target="#investmentModal" onclick="clearFields();">Add New Investment</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="table_bg investment_manager">
+        <div class="table-responsive">
+            @await Html.PartialAsync("GridTable", new DataTablesModel()
+       {
+           Name = "investment-grid",
+           UrlRead = Url.RouteUrl("GetInvestments"),
+           Length = OrderlyDefaults.GridDefaultPageSize,
+           LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+           ColumnCollection = new List<ColumnProperty>()
+           {
+               new ColumnProperty("coinImage")
+               {
+                     Title = "Coins",
+                     Width = "50",
+                     Render = new RenderCustom("RenderSvg")
+               },
+               new ColumnProperty("investedOnDateTime")
+               {
+                     Title = "Date Investment",
+                     Width = "100",
+                     Render= new RenderDate()
+               },
+               new ColumnProperty("amountInvested")
+               {
+                     Title = "Quantity",
+                     Width = "100"
+               },
+               new ColumnProperty("transactionFee")
+               {
+                     Title = "Transaction Fee",
+                     Width = "100"
+               },
+               new ColumnProperty("id")
+               {
+                     Title = "",
+                     Width = "20",
+                     Render = new RenderCustom("RenderEditDots"),
+                     ClassName="action_btns text-end"
+               }
+           }
+       })
+            <script>
+                function RenderSvg(data, type, row, meta) {
+                    return '<div class="coin_data"><div class="coin_svg" >' + data + '</div ><div class="coin_name"><span>' + row.coinName + '</span><span class="td_light">' + row.coinAbbreviation + '</span><span class="coin_org">' + row.websiteLink + '</span></div></div>'
+                }
+                function RenderEditDots(data, type, row, meta) {
+                    var html =
+                        '<div class="action-dots">'
+                        + '<div class="svg_container" onclick="dot_actions(this)" data-target="#dot_actions_' + data + '">'
+                        + '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity = "0.4" ><path fill-rule="evenodd" clip-rule="evenodd" d="M8 11.3333C7.26362 11.3333 6.66667 11.9303 6.66667 12.6667C6.66667 13.403 7.26362 14 8 14C8.73638 14 9.33334 13.403 9.33334 12.6667C9.33334 11.9303 8.73638 11.3333 8 11.3333ZM8 6.66667C7.26362 6.66667 6.66667 7.26362 6.66667 8C6.66667 8.73638 7.26362 9.33333 8 9.33333C8.73638 9.33333 9.33334 8.73638 9.33334 8C9.33334 7.26362 8.73638 6.66667 8 6.66667ZM8 2C7.26362 2 6.66667 2.59695 6.66667 3.33333C6.66667 4.06971 7.26362 4.66667 8 4.66667C8.73638 4.66667 9.33334 4.06971 9.33334 3.33333C9.33334 2.59695 8.73638 2 8 2Z" fill="#7D6880"></path></g></svg>'
+                        + '</div>'
+                        + '<div class="dot_actions" id="dot_actions_' + data + '" style="display:none">'
+                        + '<ul>'
+                        + '<li onclick="editInvestment(' + data + ');"><i class="fas fa-pencil-alt"></i></li>'
+                        + '<li onclick="deleteInvestment(' + data + ');"><i class="fas fa-trash"></i></li>'
+                        + '</ul>'
+                        + '</div>'
+                        + '</div>'
+                    return html;
+
+                }
+                function dot_actions(v) {
+                    var target = $(v).attr('data-target');
+                    $('' + target + '').toggle();
+                }
+
+            </script>
+        </div>
+    </div>
+</div>
+</div>
+
+@section RightPopup{
+    @await Html.PartialAsync("_Add", Model)
+}
+
+<script>
+    function editInvestment(id) {
+        window.location.href = '@Url.RouteUrl("EditInvestment")?id=' + id;
+    }
+
+    function deleteInvestment(id) {
+        if (confirm("@T("DeleteConfirmationMessage")")) {
+            ajaxRequests.POST("/Investment/Delete", { id: '' + id + '' }, (response) => {
+                orderlyNotification.getNotificaitonHtml();
+                if (response.success) {
+                    $('.modal-footer .btn.cus_cancel').click()
+                    refresh_investment_grid();
+                }
+            });
+        }
+    }
+
+    function clearFields() {
+        $("#InvestedAmount").val(0);
+        $('span[data-valmsg-for="@Html.IdFor(x=>x.InvestmentTransactionLink)"]').html('');
+        $("#InvestmentTransactionLink").val("");
+        $("#Sign").val("");
+        $("#CustomLink").val("");
+        $("#VestingLockup").val(0);
+        $("#VestingTokenPercentage").val(0);
+        $("#DistributionPortal").val("");
+        $("#DistributionTypeId").val(1);
+        $("#InvestmentTypeId").val(1);
+        $("#Address").val("");
+        $("#SaftFile").val("");
+        $("#WebsiteLink").val("");
+        $("#WebsiteLink-error").html("");
+        $(".lockup").addClass("d-none");
+        $(".schedule").addClass("d-none");
+        $(".schedule_btn").addClass("d-none");
+        $('#distributionTypeDiv').removeClass('visible').hide();
+        $('#availabledisributions').addClass("d-none");
+        $("#availabledisributions table").empty();
+        if (!$("#remove-lockup").hasClass("d-none")) {
+            $("#remove-lockup").addClass("d-none");
+        }
+        if ($("#add-lockup").hasClass("d-none")) {
+            $("#add-lockup").removeClass("d-none");
+        }
+        $(".schedule").html("");
+        if ($(".individual-address").hasClass("d-none")) {
+            $(".individual-address").removeClass("d-none");
+        }
+        if (!$(".shared-address").hasClass("d-none")) {
+            $(".shared-address").addClass("d-none");
+        }
+        $(".shared-html").find(".contactdetails").not("#sharedInfo1").remove();
+        $("#sharedInfo1").find("input").val("");
+    }
+</script>
+

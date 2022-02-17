@@ -1,0 +1,105 @@
+﻿@model List<PortfolioMonitoringType>
+@using Orderly.Models.Portfolio
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <div class="sp_modal_name">
+        <div class="sp_modal_icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="32" fill="#687780"></circle>
+                <path d="M32.0029 11.2942L19.2939 32.3839L32.0029 26.6075V11.2942Z" fill="#EBEBEB"></path>
+                <path d="M32.0029 26.6077L19.2939 32.384L32.0029 39.8982V26.6077Z" fill="#DBDBDB"></path>
+                <path d="M44.7142 32.3839L32.0029 11.2942V26.6075L44.7142 32.3839Z" fill="white"></path>
+                <path d="M32.0029 39.8982L44.7142 32.384L32.0029 26.6077V39.8982Z" fill="#CFCFCF"></path>
+                <path d="M19.2939 34.7952L32.0029 52.7059V42.3047L19.2939 34.7952Z" fill="#DEDEDE"></path>
+                <path d="M32.0029 42.3047V52.7059L44.7213 34.7952L32.0029 42.3047Z" fill="#CCCCCC"></path>
+            </svg>
+        </div>
+        <div class="sp_modal_name_inner">
+            <span class="d-none" id="modelNetworkId">@Model[0].Id</span>
+            <h5>@Model[0].Name</h5>
+            <h6>@Model[0].Abbreviation</h6>
+        </div>
+    </div>
+    <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.57999 5.57998C5.79092 5.36931 6.07686 5.25097 6.37499 5.25097C6.67311 5.25097 6.95904 5.36931 7.16999 5.57998L12 10.41L16.83 5.57998C16.933 5.46945 17.0572 5.3808 17.1952 5.31931C17.3332 5.25783 17.4822 5.22477 17.6332 5.2221C17.7843 5.21943 17.9343 5.24722 18.0744 5.3038C18.2145 5.36038 18.3417 5.44459 18.4485 5.55142C18.5554 5.65825 18.6396 5.78551 18.6961 5.92558C18.7527 6.06567 18.7806 6.21571 18.7779 6.36676C18.7752 6.51783 18.7422 6.66679 18.6807 6.80479C18.6192 6.94279 18.5305 7.06699 18.42 7.16998L13.59 12L18.42 16.83C18.5305 16.933 18.6192 17.0572 18.6807 17.1952C18.7422 17.3332 18.7752 17.4822 18.7779 17.6332C18.7806 17.7843 18.7527 17.9343 18.6961 18.0744C18.6396 18.2145 18.5554 18.3417 18.4485 18.4485C18.3417 18.5554 18.2145 18.6396 18.0744 18.6961C17.9343 18.7527 17.7843 18.7806 17.6332 18.7779C17.4822 18.7752 17.3332 18.7422 17.1952 18.6807C17.0572 18.6192 16.933 18.5305 16.83 18.42L12 13.59L7.16999 18.42C6.95672 18.6187 6.67464 18.7269 6.38319 18.7218C6.09174 18.7165 5.81367 18.5985 5.60754 18.3924C5.40143 18.1863 5.28336 17.9082 5.27822 17.6167C5.27307 17.3253 5.38127 17.0433 5.57999 16.83L10.41 12L5.57999 7.16998C5.36931 6.95905 5.25098 6.67311 5.25098 6.37498C5.25098 6.07686 5.36931 5.79093 5.57999 5.57998Z"
+                  fill="#24292E" />
+        </svg>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="address-modal">
+        @foreach (var value in Model)
+        {
+            foreach (var address in value.Addresses)
+            {
+                <div class="address-inner-div"  data-id="@address.Id">
+                    <div class="form-field">
+                        <a href="javascript:void(0)" onclick="setupPortfolioMonitoring.removeAddress(@address.Id,this)" class="cus_cross_icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z" /></svg>
+                        </a>
+                        <input type="text" onblur="setupPortfolioMonitoring.validate(this)" pattern="/^0x[a-fA-F0-9]{40}$/" value="@address.Address" data-target="address" class="form-control" aria-describedby="emailHelp" placeholder="Address" />
+                        <span class="validation"></span>
+                    </div>
+                    <div class="form-field">
+                        <input type="text" data-target="alies" value="@address.Alies" class="form-control" id="" aria-describedby="emailHelp" placeholder="Address Alias (Optional)" />
+                    </div>
+                    @{
+                        if (Model[0].Id == Convert.ToInt32(MonitoringTypes.Ethereum))
+                        {
+                            <div class="form-field">
+                                <input type="checkbox" id="chkBNB" class="chkBnb" data-target="bnbCheckbox" />&nbsp;&nbsp;<span class="checkbox-bnb">Add Address For "Binance Smart Chain"</span>
+                            </div>
+                        }
+                    }
+                    <div class="cus_divider"></div>
+                </div>
+            }
+            if (value.Addresses.Count <= 0)
+            {
+                <div class="address-inner-div" data-id="0">
+                    <div class="form-field">
+                        <input type="text" onblur="setupPortfolioMonitoring.validate(this)" pattern="/^0x[a-fA-F0-9]{40}$/" data-target="address" class="form-control" aria-describedby="emailHelp" placeholder="Address" />
+                        <span class="validation"></span>
+                    </div>
+                    <div class="form-field">
+                        <input type="text" data-target="alies" class="form-control" id="" aria-describedby="emailHelp" placeholder="Address Alias (Optional)" />
+                    </div>
+                    @{
+                        if (Model[0].Id == Convert.ToInt32(MonitoringTypes.Ethereum))
+                        {
+                            <div class="form-field">
+                                <input type="checkbox" id="chkBNB" class="chkBnb" data-target="bnbCheckbox" />&nbsp;&nbsp;<span class="checkbox-bnb">Add Address For "Binance Smart Chain"</span>
+                            </div>
+                        }
+                    }
+                    <div class="cus_divider"></div>
+                </div>
+                <script type="text/javascript">
+                    $('.add_address').removeAttr('onclick');
+                </script>
+            }
+        }
+    </div>
+    <a href="javascript:void(0)" class="add_address add_address_network" onclick="setupPortfolioMonitoring.addAdditionalAddress()">+ Add Additional Address</a>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn cus_cancel" data-bs-dismiss="modal">
+        Cancel
+    </button>
+    <button type="button" onclick="setupPortfolioMonitoring.savePortFolioMonitoring()" class="btn cus_save">Save</button>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".add_address_network").click(function () {
+            var networkId = parseInt($("#modelNetworkId").html());
+            if (isNaN(networkId)) { networkId = 0; }
+            if (networkId === 1) {
+                $(".hiddenBNB").removeClass("d-none");
+            }
+        });
+    });
+</script>

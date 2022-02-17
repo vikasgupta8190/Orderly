@@ -1,0 +1,2 @@
+﻿Alter Table OTCs
+Add IsArchive bit null

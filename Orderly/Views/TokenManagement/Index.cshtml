@@ -1,0 +1,206 @@
+﻿@model TokenManagementModel
+@{
+    Layout = "_AuthorizeLayout";
+}
+
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications")
+<div class="container cus_container">
+    <div class="upper_heading">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h4 class="common_heading">Manage Token</h4>
+            </div>
+            <div class="col-md-6">
+                <ul class="all_wallets">
+                    <li>
+                        <a href="javascript:void(0)" class="common_btn" data-bs-toggle="modal" data-bs-target="#tokenModal" onclick="resetFields()">Add New Token</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="table_bg investment_manager">
+        <div class="table-responsive">
+            @await Html.PartialAsync("GridTable", new DataTablesModel()
+       {
+           Name = "token-grid",
+           UrlRead = Url.RouteUrl("GetTokens"),
+           Length = OrderlyDefaults.GridDefaultPageSize,
+           LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+           ColumnCollection = new List<ColumnProperty>()
+           {
+               new ColumnProperty("name")
+               {
+                     Title = "Name",
+                     Width = "50",
+               },
+               new ColumnProperty("address")
+               {
+                     Title = "Address",
+                     Width = "100",
+               },
+               new ColumnProperty("networkName")
+               {
+                     Title = "Network",
+                     Width = "100"
+               },
+               new ColumnProperty("id")
+               {
+                     Title = "",
+                     Width = "20",
+                     Render = new RenderCustom("RenderEditDots"),
+                     ClassName="action_btns text-end"
+               }
+           }
+       })
+            <script>
+                $(document).ready(function () {
+                    @*$('#@Html.IdFor(x => x.InvestmentIds)').kendoMultiSelect({
+                        animation: {
+                            open: {
+                                effects: "zoom:in",
+                                duration: 300
+                            }
+                        }
+                    });*@
+
+                    if (window.location.pathname == '@Url.RouteUrl("EditToken")') {
+                        $("#tokenModal").modal('show');
+                    }
+                    $('#add-token').submit(function (e) {
+                        e.preventDefault();
+                        var url = $(this).attr('action');
+                        ajaxRequests.POST(url, $(this).serialize(), (response) => {
+                            debugger;
+                            if (!response.success) {
+                                orderlyNotification.getNotificaitonHtml();
+                            } else {
+                                window.location.reload()
+                            }
+                        }, (error) => { orderlyNotification.getNotificaitonHtml() })
+                    });
+                });
+                function RenderSvg(data, type, row, meta) {
+                    return '<div class="coin_data"><div class="coin_svg" >' + data + '</div ><div class="coin_name"><span>' + row.coinName + '</span><span class="td_light">' + row.coinAbbreviation + '</span><span class="coin_org">' + row.websiteLink + '</span></div></div>'
+                }
+                function RenderEditDots(data, type, row, meta) {
+                    var html =
+                        '<div class="action-dots">'
+                        + '<div class="svg_container" onclick="dot_actions(this)" data-target="#dot_actions_' + data + '">'
+                        + '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity = "0.4" ><path fill-rule="evenodd" clip-rule="evenodd" d="M8 11.3333C7.26362 11.3333 6.66667 11.9303 6.66667 12.6667C6.66667 13.403 7.26362 14 8 14C8.73638 14 9.33334 13.403 9.33334 12.6667C9.33334 11.9303 8.73638 11.3333 8 11.3333ZM8 6.66667C7.26362 6.66667 6.66667 7.26362 6.66667 8C6.66667 8.73638 7.26362 9.33333 8 9.33333C8.73638 9.33333 9.33334 8.73638 9.33334 8C9.33334 7.26362 8.73638 6.66667 8 6.66667ZM8 2C7.26362 2 6.66667 2.59695 6.66667 3.33333C6.66667 4.06971 7.26362 4.66667 8 4.66667C8.73638 4.66667 9.33334 4.06971 9.33334 3.33333C9.33334 2.59695 8.73638 2 8 2Z" fill="#7D6880"></path></g></svg>'
+                        + '</div>'
+                        + '<div class="dot_actions" id="dot_actions_' + data + '" style="display:none">'
+                        + '<ul>'
+                        + '<li onclick="editToken(' + data + ');"><i class="fas fa-pencil-alt"></i></li>'
+                        + '<li onclick="deleteToken(' + data + ');"><i class="fas fa-trash"></i></li>'
+                        + '</ul>'
+                        + '</div>'
+                        + '</div>'
+                    return html;
+
+                }
+                function dot_actions(v) {
+                    var target = $(v).attr('data-target');
+                    $('' + target + '').toggle();
+                }
+
+
+                function editToken(id) {
+                    window.location.href = '@Url.RouteUrl("EditToken")?id=' + id;
+                }
+                @if (ViewBag.OpenSidePopup != null && ViewBag.OpenSidePopup)
+                {
+                    <text>
+                $(document).ready(function () {
+                    $('#tokenModal').modal('show');
+                })
+
+                </text>
+                }
+
+                function deleteToken(id) {
+                    if (confirm("@T("DeleteConfirmationMessage")")) {
+                        ajaxRequests.POST("/TokenManagement/Delete", { id: '' + id + '' }, (response) => {
+                            orderlyNotification.getNotificaitonHtml();
+                            if (response.success) {
+                                $('.modal-footer .btn.cus_cancel').click()
+                                refresh_token_grid();
+                            }
+                        });
+                    }
+                }
+
+                function resetFields() {
+                    $("#Id").val("");
+                    $("#Name").val("");
+                    $("#Address").val("");
+                    $("#InvestmentId").val("");
+                }
+            </script>
+        </div>
+    </div>
+</div>
+</div>
+@section RightPopup{
+    @using (Html.BeginForm(FormMethod.Post, new { id = "add-token" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+        <div class="modal fade cus_right_modal cus_address_add_modal add_new_investment"
+             id="tokenModal"
+             tabindex="-1"
+             data-bs-backdrop="static"
+             data-bs-keyboard="false"
+             aria-labelledby="tokenModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    @Html.HiddenFor(x => x.Id)
+                    <div class="modal-header">
+                        <h4 class="common_heading">@T("AddNewToken")</h4>
+                        <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.57999 5.57998C5.79092 5.36931 6.07686 5.25097 6.37499 5.25097C6.67311 5.25097 6.95904 5.36931 7.16999 5.57998L12 10.41L16.83 5.57998C16.933 5.46945 17.0572 5.3808 17.1952 5.31931C17.3332 5.25783 17.4822 5.22477 17.6332 5.2221C17.7843 5.21943 17.9343 5.24722 18.0744 5.3038C18.2145 5.36038 18.3417 5.44459 18.4485 5.55142C18.5554 5.65825 18.6396 5.78551 18.6961 5.92558C18.7527 6.06567 18.7806 6.21571 18.7779 6.36676C18.7752 6.51783 18.7422 6.66679 18.6807 6.80479C18.6192 6.94279 18.5305 7.06699 18.42 7.16998L13.59 12L18.42 16.83C18.5305 16.933 18.6192 17.0572 18.6807 17.1952C18.7422 17.3332 18.7752 17.4822 18.7779 17.6332C18.7806 17.7843 18.7527 17.9343 18.6961 18.0744C18.6396 18.2145 18.5554 18.3417 18.4485 18.4485C18.3417 18.5554 18.2145 18.6396 18.0744 18.6961C17.9343 18.7527 17.7843 18.7806 17.6332 18.7779C17.4822 18.7752 17.3332 18.7422 17.1952 18.6807C17.0572 18.6192 16.933 18.5305 16.83 18.42L12 13.59L7.16999 18.42C6.95672 18.6187 6.67464 18.7269 6.38319 18.7218C6.09174 18.7165 5.81367 18.5985 5.60754 18.3924C5.40143 18.1863 5.28336 17.9082 5.27822 17.6167C5.27307 17.3253 5.38127 17.0433 5.57999 16.83L10.41 12L5.57999 7.16998C5.36931 6.95905 5.25098 6.67311 5.25098 6.37498C5.25098 6.07686 5.36931 5.79093 5.57999 5.57998Z" fill="#24292E" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="sub_heading">@T("General")</h5>
+                        <div class="cus_field">
+                            @Html.LabelFor(x => x.NetworkId, new { @class = "form-label" })
+                            @Html.DropDownListFor(x => x.NetworkId, Model.AvailableNetworks, new { @class = "form-select" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.NetworkId, "", new { @class = "text-danger validation" })
+
+                        <div class="cus_field">
+                            @Html.LabelFor(x => x.Name, new { @class = "form-label" })
+                            @Html.TextBoxFor(x => x.Name, new { @class = "form-control", placeholder = "Name" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger validation" })
+
+                        <div class="cus_field">
+                            @Html.LabelFor(x => x.Address, new { @class = "form-label" })
+                            @Html.TextBoxFor(x => x.Address, new { @class = "form-control", placeholder = "9188jaklz0918a-jz08180z5" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger validation" })
+
+                        <div class="cus_field">
+                            @Html.LabelFor(x => x.InvestmentId, new { @class = "form-label" })
+                            @Html.DropDownListFor(x => x.InvestmentId, Model.AvailableInvestment, "Select Investment", new { @class = "form-select" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.InvestmentId, "", new { @class = "text-danger validation" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn cus_cancel"
+                                data-bs-dismiss="modal">
+                            @T("Cancel")
+                        </button>
+                        <button type="submit" class="btn cus_save">@T("Save")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

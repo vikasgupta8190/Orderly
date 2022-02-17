@@ -1,0 +1,28 @@
+﻿@model Orderly.Models.ViewModels.VerifyEmailModel
+@{
+    ViewBag.Title = "Email Not Confirmed";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+    <div class="welcome_left create_account">
+        <h3>Email Not Confirmed</h3>
+        <p class="sub_head">
+            Email address is not confirmed. Please check your email and confirm your email address or <a href="@Url.RouteUrl("SendEmailVerificationLink", new { id = Model.UserId })">click here</a> to resend verify link.
+        </p>
+        <h5><a href="/Account/ForgotPassword"> Forgot your password?</a></h5>
+        <svg width="480" height="84" viewBox="0 0 480 84" fill="none" xmlns="http://www.w3.org/2000/svg" class="vector_cus">
+            <rect opacity="0.03" y="35.4592" width="92" height="63.0386" fill="white" />
+            <rect opacity="0.03" x="291" y="35.4592" width="92" height="63.0386" fill="white" />
+            <rect opacity="0.03" x="388" y="14.4463" width="92" height="84.0515" fill="white" />
+            <rect opacity="0.03" x="97" y="14.4463" width="92" height="84.0515" fill="white" />
+            <rect opacity="0.08" x="194" width="92" height="102" fill="white" />
+        </svg>
+    </div>
+</body>
+</html>

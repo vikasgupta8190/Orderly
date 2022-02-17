@@ -1,0 +1,91 @@
+﻿<ul class="nav nav-pills cus_pills row" id="pills-tab" role="tablist">
+    <li class="nav-item col-2" role="presentation">
+        <button class="nav-link" onclick="setFilter('1D',this);" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+            1D
+        </button>
+    </li>
+    <li class="nav-item col-2" role="presentation">
+        <button class="nav-link active" onclick="setFilter('5D',this);" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+            5D
+        </button>
+    </li>
+    <li class="nav-item col-2" role="presentation">
+        <button class="nav-link" onclick="setFilter('1M',this);" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+            1M
+        </button>
+    </li>
+    <li class="nav-item col-2" role="presentation">
+        <button class="nav-link" onclick="setFilter('1Y',this);" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+            1Y
+        </button>
+    </li>
+    <li class="nav-item col-2" role="presentation">
+        <button class="nav-link" onclick="setFilter('5Y',this);" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+            5Y
+        </button>
+    </li>
+</ul>
+
+
+<script src="~/js/google-graph.js"></script>
+
+<div id="chart_div" style="width: 100%;"></div>
+
+<script type="text/javascript">
+
+    var chartData = [['Date', 'Price']];
+    var dateRange = '5D';
+    function setFilter(v, s) {
+        $('.nav-link').removeClass('active');
+        $(s).addClass('active');
+        dateRange = v;
+        loadChartData()
+    }
+    loadChartData();
+    //setInterval(function () {
+    //    loadChartData();
+    //}, 10000);
+    function loadChartData() {
+        ajaxRequests.GET('@Url.RouteUrl("GetChartData")?dateRange=' + dateRange + '',
+            (response) => {
+                chartData = [['Date', 'Price']];
+                    for (let i = 0; i <= Object.keys(response).length - 1; i++) {                       
+                        chartData.push([Object.keys(response)[i], Object.values(response)[i]])
+                    }
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+            },
+            (error) => {
+                console.log(error);
+            })
+    }
+
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable(chartData);
+        var title = '';
+        if (dateRange == "1D")
+            title = '1 day';
+       if (dateRange == "5D")
+            title = '5 day';
+        if (dateRange == "1M")
+            title = '1 month';
+        if (dateRange == "1Y")
+            title = '1 year';
+        if (dateRange == "5Y")
+            title = '5 year';
+
+        var options = {
+            title: '',
+            hAxis: { title: title, titleTextStyle: { color: '#333' } },
+            vAxis: { minValue: 12351.67 }
+        };
+        if (chartData.length > 1) {
+            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        } else {
+            $("#chart_div").html("No data found.");
+            $("#chart_div").addClass("text-center");
+        }
+    }
+</script>

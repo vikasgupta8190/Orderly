@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null;
+}
+
+@await Html.PartialAsync("GridTable", new DataTablesModel()
+{
+    Name = "distribution-grid-" + ViewBag.TxHash + "-" + ViewBag.NetworkId + "_" + ViewBag.Id + "",
+    UrlRead = string.Format("{0}?txHash={1}&networkId={2}", Url.RouteUrl("DistributionGridList"), ViewBag.TxHash, ViewBag.NetworkId),
+    Length = 100,
+
+    LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+    ColumnCollection = new List<ColumnProperty>()
+          {
+              new ColumnProperty("transactionHexCode")
+              {
+                  Title = T("TansactionHashCode").Value,
+                  Width = "50",
+                   Render= new RenderCustom("analyzer.renderHexWithDots")
+              },
+              new ColumnProperty("date")
+              {
+                  Title = T("DateUTC").Value,
+                  Width = "100",
+                  Render= new RenderDate()
+                  //Render= new RenderCustom("renderInvestedAmountWithPriceAndQuantity")
+              },
+              new ColumnProperty("from")
+              {
+                  Title = T("From").Value,
+                  Width = "100",
+                  ClassName="text-start",
+                  Render= new RenderCustom("analyzer.renderHexWithDots")
+              },
+              new ColumnProperty("to")
+              {
+                  Title = T("To").Value,
+                  Width = "100",
+                  ClassName="text-start",
+                  Render= new RenderCustom("analyzer.renderHexWithDots")
+              },
+              new ColumnProperty("quantity")
+              {
+                 Title = T("Quantity").Value,
+                 Width = "20",
+                 Render = new RenderCustom("analyzer.RenderSubTableColumn"),
+                 ClassName="action_btns text-end"
+              }
+          }
+})

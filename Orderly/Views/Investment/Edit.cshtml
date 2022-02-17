@@ -1,0 +1,237 @@
+﻿@model UserInvestmentModel
+@{
+    ViewBag.Title = "Investment Manager";
+    Layout = "~/Views/Shared/_AuthorizeLayout.cshtml";
+}
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications")
+    <div class="container cus_container">
+        <div class="upper_heading">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h4 class="common_heading">Investments Manager</h4>
+                </div>
+                <div class="col-md-6">
+                    <ul class="all_wallets">
+                        <li class="cus_sort">
+                            Sort:
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7.75758 8.45455C7.42286 8.45455 7.15152 8.1832 7.15152 7.84848C7.15152 7.51377 7.42286 7.24242 7.75758 7.24242H11.3939C11.7287 7.24242 12 7.51377 12 7.84848C12 8.1832 11.7287 8.45455 11.3939 8.45455H7.75758ZM7.75758 12.0909C7.42286 12.0909 7.15152 11.8196 7.15152 11.4848C7.15152 11.1501 7.42286 10.8788 7.75758 10.8788H8.9697C9.30441 10.8788 9.57576 11.1501 9.57576 11.4848C9.57576 11.8196 9.30441 12.0909 8.9697 12.0909H7.75758ZM7.75758 4.81818C7.42286 4.81818 7.15152 4.54684 7.15152 4.21212C7.15152 3.8774 7.42286 3.60606 7.75758 3.60606H13.8182C14.1529 3.60606 14.4242 3.8774 14.4242 4.21212C14.4242 4.54684 14.1529 4.81818 13.8182 4.81818H7.75758ZM4.72727 10.8788H6.24242L4.12121 13L2 10.8788H3.51515V3.60606C3.51515 3.27134 3.78649 3 4.12121 3C4.45593 3 4.72727 3.27134 4.72727 3.60606V10.8788Z" fill="#08101F"></path>
+                            </svg>
+                        </li>
+                        <li class="cus_date">
+                            Date
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.14142 7.54064L7.85861 10.2578C7.93671 10.3359 8.06334 10.3359 8.14145 10.2578L10.8586 7.54064C10.9846 7.41464 10.8954 7.19922 10.7171 7.19922H5.28285C5.10466 7.19922 5.01543 7.41465 5.14142 7.54064Z" fill="#08101F"></path>
+                            </svg>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="cus_project">
+            <div class="project_detail">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <div class="project_single">
+                            <div class="project_img">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M24 0C10.7682 0 0 10.7633 0 24C0 33.512 5.5674 41.7532 13.613 45.6342V45.6489H13.6472C16.7853 47.1544 20.2949 48 24 48C37.2318 48 48 37.2318 48 24C48 10.7682 37.2318 0 24 0ZM24 1.96986C36.1466 1.96986 46.0302 11.8534 46.0302 24C46.0302 27.49 45.209 30.7894 43.7621 33.7271C40.5898 32.1874 37.3686 31.0436 34.1181 30.2713V11.8925C34.1181 11.257 33.6098 10.7389 32.989 10.7389H28.9515H18.7845H14.747C14.1214 10.7389 13.6179 11.257 13.6179 11.8925V30.3544C10.4652 31.1316 7.33198 32.2509 4.24766 33.7271C2.79593 30.7894 1.97474 27.49 1.97474 23.9951C1.96985 11.8534 11.8534 1.96986 24 1.96986ZM5.51363 35.956C8.12382 34.6607 10.8367 33.6684 13.613 32.9841V43.42C10.3234 41.6554 7.53726 39.0745 5.51363 35.956ZM18.7845 45.3996V20.8081C18.7845 17.9682 21.1161 15.6024 23.9022 15.6024C26.6884 15.6024 28.9515 17.9047 28.9515 20.7495C28.9515 20.769 28.9466 20.7886 28.9466 20.8081H28.9515V29.3621C26.576 29.0933 24.1906 28.9955 21.8102 29.1226L19.8452 31.9674C22.9002 31.7084 25.8721 31.7328 28.8049 32.0603C28.8293 32.0652 28.8587 32.0652 28.8831 32.0652C28.9026 32.0652 28.9222 32.0701 28.9515 32.075C29.4599 32.1336 31.3271 32.3731 33.0281 32.7984L28.9515 34.1817V45.4582C27.358 45.8248 25.7059 46.0252 24.0049 46.0252C22.2012 46.0301 20.4562 45.8053 18.7845 45.3996ZM34.1181 43.5568V33.0281C36.8945 33.7271 39.6465 34.7487 42.4033 36.088C40.3308 39.231 37.4762 41.8118 34.1181 43.5568Z" fill="url(#paint0_linear_512_10172)"></path>
+                                    <defs>
+                                        <linearGradient id="paint0_linear_512_10172" x1="23.9997" y1="49.0471" x2="23.9997" y2="-7.3593" gradientUnits="userSpaceOnUse">
+                                            <stop offset="0.0858" stop-color="#8D29C1"></stop>
+                                            <stop offset="0.2383" stop-color="#942BBB"></stop>
+                                            <stop offset="0.4667" stop-color="#A92FAC"></stop>
+                                            <stop offset="0.7413" stop-color="#CA3793"></stop>
+                                            <stop offset="1" stop-color="#F03F77"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="project_name">
+                                <h4>Inv. Project Name</h4>
+                                <p>Title from the website</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <ul class="project_right">
+                            <li>
+                                <a href="javascript:void(0)" onclick="$('#refundAmount').val(''); $('.spanRefundAmount').html('');" data-bs-toggle="modal" data-bs-target="#refundModal">Add Refund Pending Event</a>
+                            </li>
+                            @if (Convert.ToDecimal(Model.RefundAmount) > 0)
+                            {
+                                <li><a href="javascript:void(0)">Refunded</a></li>
+                                <span class="d-none" id="alreadyRefundAmount">@Model.RefundAmount</span>
+                            }
+                            <li>
+                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#investmentModal">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g opacity="0.4">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14 13.333C14.3682 13.333 14.6667 13.6315 14.6667 13.9997C14.6667 14.3679 14.3682 14.6663 14 14.6663H2.00004C1.63185 14.6663 1.33337 14.3679 1.33337 13.9997C1.33337 13.6315 1.63185 13.333 2.00004 13.333H14ZM4.1953 8.8616L11.5286 1.52827C11.769 1.28795 12.1471 1.26946 12.4086 1.47281L12.4714 1.52827L14.4714 3.52827C14.7118 3.76859 14.7303 4.14675 14.5269 4.40827L14.4714 4.47108L7.13811 11.8044C7.03393 11.9086 6.8988 11.9747 6.75434 11.9939L6.66671 11.9997H4.66671C4.32482 11.9997 4.04304 11.7423 4.00453 11.4108L4.00004 11.333V9.33301C4.00004 9.18567 4.04882 9.04335 4.13743 8.92766L4.1953 8.8616L11.5286 1.52827L4.1953 8.8616ZM12 2.94248L5.33337 9.60915V10.6663H6.39056L13.0572 3.99967L12 2.94248Z" fill="#687780"></path>
+                                        </g>
+                                    </svg>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" onclick="deleteInvestment(@Model.Id)">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g opacity="0.4">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.3333 5.33301C11.7015 5.33301 12 5.63148 12 5.99967V12.6663C12 13.7709 11.1045 14.6663 9.99996 14.6663H5.99996C4.89539 14.6663 3.99996 13.7709 3.99996 12.6663V5.99967C3.99996 5.63148 4.29844 5.33301 4.66663 5.33301H11.3333ZM10.6666 6.66634H5.33329V12.6663C5.33329 13.0345 5.63177 13.333 5.99996 13.333H9.99996C10.3681 13.333 10.6666 13.0345 10.6666 12.6663V6.66634ZM5.99996 1.99967C5.99996 1.63148 6.29844 1.33301 6.66663 1.33301H9.33329C9.70148 1.33301 9.99996 1.63148 9.99996 1.99967V2.66634H12.6666C13.0348 2.66634 13.3333 2.96482 13.3333 3.33301C13.3333 3.7012 13.0348 3.99967 12.6666 3.99967H3.33329C2.9651 3.99967 2.66663 3.7012 2.66663 3.33301C2.66663 2.96482 2.9651 2.66634 3.33329 2.66634H5.99996V1.99967Z" fill="#687780"></path>
+                                        </g>
+                                    </svg>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="project_sub_details">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Project Links:</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="inner_label">Website:</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="inner_label label_green">@Model.WebsiteLink</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="inner_label">Distribution Portal:</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="inner_label label_green">@Model.DistributionPortal</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="inner_label">Custome Link:</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="inner_label label_green">@Model.CustomLink</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Investment Signee:</h5>
+                        <span class="investment_sign">@Model.Sign</span>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Investment Amount:</h5>
+                        <span class="investment_amount">$<span id="investmentAmount">@Model.InvestedAmount</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section RightPopup{
+    @await Html.PartialAsync("_Add", Model)
+}
+<form asp-action="AddRefund" id="new-refund" asp-controller="Investment" method="post">
+    <div class="modal fade cus_right_modal cus_address_add_modal add_new_investment"
+         id="refundModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="refundModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                @Html.HiddenFor(x => x.Id)
+                <div class="modal-header">
+                    <h4 class="common_heading">Add Refund</h4>
+                    <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.57999 5.57998C5.79092 5.36931 6.07686 5.25097 6.37499 5.25097C6.67311 5.25097 6.95904 5.36931 7.16999 5.57998L12 10.41L16.83 5.57998C16.933 5.46945 17.0572 5.3808 17.1952 5.31931C17.3332 5.25783 17.4822 5.22477 17.6332 5.2221C17.7843 5.21943 17.9343 5.24722 18.0744 5.3038C18.2145 5.36038 18.3417 5.44459 18.4485 5.55142C18.5554 5.65825 18.6396 5.78551 18.6961 5.92558C18.7527 6.06567 18.7806 6.21571 18.7779 6.36676C18.7752 6.51783 18.7422 6.66679 18.6807 6.80479C18.6192 6.94279 18.5305 7.06699 18.42 7.16998L13.59 12L18.42 16.83C18.5305 16.933 18.6192 17.0572 18.6807 17.1952C18.7422 17.3332 18.7752 17.4822 18.7779 17.6332C18.7806 17.7843 18.7527 17.9343 18.6961 18.0744C18.6396 18.2145 18.5554 18.3417 18.4485 18.4485C18.3417 18.5554 18.2145 18.6396 18.0744 18.6961C17.9343 18.7527 17.7843 18.7806 17.6332 18.7779C17.4822 18.7752 17.3332 18.7422 17.1952 18.6807C17.0572 18.6192 16.933 18.5305 16.83 18.42L12 13.59L7.16999 18.42C6.95672 18.6187 6.67464 18.7269 6.38319 18.7218C6.09174 18.7165 5.81367 18.5985 5.60754 18.3924C5.40143 18.1863 5.28336 17.9082 5.27822 17.6167C5.27307 17.3253 5.38127 17.0433 5.57999 16.83L10.41 12L5.57999 7.16998C5.36931 6.95905 5.25098 6.67311 5.25098 6.37498C5.25098 6.07686 5.36931 5.79093 5.57999 5.57998Z" fill="#24292E" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="cus_field">
+                        <label>Refund Amount</label>
+                        <input type="number" class="form-control" id="refundAmount" name="RefundAmount" />
+                    </div>
+                    <span class="text-danger validation spanRefundAmount"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn cus_cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn cus_save">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#refundAmount").keypress(function () {
+            $(".spanRefundAmount").html("");
+        });
+
+        if ($("#chkManually").is(":checked")) {
+            if ($("#Sign").hasClass("d-none")) {
+                $("#Sign").removeClass("d-none");
+            }
+            if (!$("#contact").hasClass("d-none")) {
+                $("#contact").addClass("d-none");
+            }
+        } else {
+            if (!$("#Sign").hasClass("d-none")) {
+                $("#Sign").val("");
+                $("#Sign").addClass("d-none");
+            }
+
+            if ($("#contact").hasClass("d-none")) {
+                $("#contact").removeClass("d-none");
+            }
+        }
+    });
+
+
+    function deleteInvestment(id) {
+        if (confirm("@T("DeleteConfirmationMessage")")) {
+            ajaxRequests.POST("/Investment/Delete", { id: '' + id + '' }, (response) => {
+                if (!response.success) {
+                    $(response.error).each(function () {
+                        console.log(this);
+                    })
+                } else {
+                    window.location.href = "/Investment/Index";
+                }
+            });
+        }
+    }
+
+    $('#new-refund').submit(function (e) {
+        $(".spanRefundAmount").html("");
+        e.preventDefault();
+        var refundAmount = parseFloat($("#refundAmount").val());
+        if (isNaN(refundAmount)) { refundAmount = 0; }
+        if (refundAmount > 0) {    
+            var investedAmount = parseFloat($("#investmentAmount").html());
+            if (isNaN(investedAmount)) { investedAmount = 0; }
+            var alreadyRefundAmount = parseFloat($("#alreadyRefundAmount").html());
+            if (isNaN(alreadyRefundAmount)) { alreadyRefundAmount = 0; }
+            var totalRefundAmount = alreadyRefundAmount + refundAmount
+            if (totalRefundAmount <= investedAmount) {
+                var url = $(this).attr('action');
+                ajaxRequests.POST(url, $(this).serialize(), (response) => {
+                    if (!response.success) {
+                        orderlyNotification.getNotificaitonHtml();
+                    } else {
+                        orderlyNotification.getNotificaitonHtml();
+                        setTimeout(function () { window.location.reload(); }, 3000);
+                    }
+                });
+            } else {
+                var message = "Refund amount should not be greater than invested amount.";
+                if (alreadyRefundAmount > 0) {
+                    message = "Refund amount should not be greater than invested amount. you already refund $" + alreadyRefundAmount +" amount";
+                } 
+                $(".spanRefundAmount").html(message);
+            }
+        } else {
+            $(".spanRefundAmount").html("This field is required");
+        }
+    });
+</script>

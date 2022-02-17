@@ -1,0 +1,539 @@
+﻿@model DashboardModel
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_AuthorizeLayout.cshtml";
+}
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications") 
+<div class="upper_heading">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h4 class="common_heading">Portfolio Overview</h4>
+        </div>
+        <div class="col-md-6">
+            <div class="all_wallets">
+                <div class="col-sm-2 d-flex">
+                    <svg width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.6">
+                            <path d="M21.6389 14.3958H17.5906C16.1042 14.3949 14.8994 13.191 14.8985 11.7045C14.8985 10.2181 16.1042 9.01416 17.5906 9.01324H21.6389"
+                                  stroke="#687780"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round" />
+                            <path d="M18.0486 11.6429H17.7369"
+                                  stroke="#687780"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round" />
+                            <path fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M7.74766 3H16.3911C19.2892 3 21.6388 5.34951 21.6388 8.24766V15.4247C21.6388 18.3229 19.2892 20.6724 16.3911 20.6724H7.74766C4.84951 20.6724 2.5 18.3229 2.5 15.4247V8.24766C2.5 5.34951 4.84951 3 7.74766 3Z"
+                                  stroke="#687780"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round" />
+                            <path opacity="0.4"
+                                  d="M7.03561 7.53814H12.4346"
+                                  stroke="#687780"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round" />
+                        </g>
+                    </svg>
+                    <span>All Wallets</span>
+                </div>
+                <div class="col-sm-9">
+                    <select class="valid" id="wallet" multiple="multiple" aria-invalid="false">
+                        @foreach (var options in Model.AvailableNetworks)
+                        {
+                            if (options.Selected)
+                            {
+                                <option value="@options.Value" selected>@options.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@options.Value">@options.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="price_cards">
+    <div class="row gy-4">
+        <div class="col-md-4">
+            <div class="inner_price_card">
+                <h5>Liquid Value ($)</h5>
+                <h6>$@Model.LiquidValue</h6>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="inner_price_card">
+                <h5>Liquid ATH ($)</h5>
+                <h6>$@Model.LiquidATH</h6>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="inner_price_card">
+                <h5>Liquid ATL ($)</h5>
+                <h6>$@Model.LiquidATL</h6>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="inner_price_card light_color">
+                <h5>Locked Value ($)</h5>
+                <h6>$@Model.LockedValue</h6>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="inner_price_card light_color">
+                <h5>Locked ATH ($)</h5>
+                <h6>$@Model.LockedATH</h6>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="inner_price_card light_color">
+                <h5>Locked ATL ($)</h5>
+                <h6>$@Model.LockedATL</h6>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="cus_tokens">
+    <div class="row">
+        <div class="col-md-6">
+            @Html.HiddenFor(x => x.TokenSearchModel.NextDays, new { id = "NextDays" })
+            @Html.HiddenFor(x => x.TokenSearchModel.NetworkId, new { id = "NetworkId" })
+            <div class="token_table table_bg unlock_tokens">
+                <div class="dashboard-token-header">
+                    <table class="w-100">
+                        <thead>
+                            <tr>
+                                <th>Upcoming Token Unlock</th>
+                                <th>
+                                    <div>
+                                        <select onchange="changeNextDays(this)" class="next-days-portfolio" id="ddlNextDays">
+                                            <option value="30">Next 30 days</option>
+                                            <option value="60">Next 60 days</option>
+                                        </select>
+                                    </div>
+                                </th>
+                                <th>Order by time left</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="table-responsive upcoming-token-grid">
+                    @Html.AntiForgeryToken()
+                    @await Html.PartialAsync("GridTable", new DataTablesModel()
+               {
+                   Name = "Wallet-Upcoming-Token-grid",
+                   UrlRead = Url.RouteUrl("GetWalletUpcomingToken") + "?isUpcoming=true",
+                   Length = OrderlyDefaults.GridDefaultPageSize,
+                   LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                   Filters = new List<FilterParameter>()
+                                     {
+                                         new FilterParameter(nameof(Model.TokenSearchModel.NextDays)),
+                                          new FilterParameter(nameof(Model.TokenSearchModel.NetworkId))
+                                     },
+                   ColumnCollection = new List<ColumnProperty>()
+                   {
+                       new ColumnProperty("tokenValue")
+                       {
+                           Title = "",
+                           Width = "50",
+                           Render= new RenderCustom("renderToken")
+                       },
+                       new ColumnProperty("tokenDate")
+                       {
+                           Title = "",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("renderDate"),
+                       },
+                       new ColumnProperty("leftTime")
+                       {
+                           Title = "",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("RenderLeftTime"),
+                       }
+                   }
+               })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.HiddenFor(x => x.TokenSearchModel.PrevDays, new { id = "PrevDays" })
+            <div class="token_table table_bg unlock_tokens">
+                <div class="dashboard-token-header">
+                    <table class="w-100">
+                        <thead>
+                            <tr>
+                                <th>Previous Token Unlock</th>
+                                <th>
+                                    <div>
+                                        <select onchange="changePrevDays(this)" class="next-days-portfolio" id="ddlNextDays">
+                                            <option value="30">Prev 30 days</option>
+                                            <option value="60">Prev 60 days</option>
+                                        </select>
+                                    </div>
+                                </th>
+                                <th>Order by time Passed</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="table-responsive upcoming-token-grid">
+                    @Html.AntiForgeryToken()
+                    @await Html.PartialAsync("GridTable", new DataTablesModel()
+               {
+                   Name = "Wallet-Previous-Token-grid",
+                   UrlRead = Url.RouteUrl("GetWalletUpcomingToken") + "?isUpcoming=false",
+                   Length = OrderlyDefaults.GridDefaultPageSize,
+                   LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                   Filters = new List<FilterParameter>()
+                                     {
+                                         new FilterParameter(nameof(Model.TokenSearchModel.PrevDays)),
+                                          new FilterParameter(nameof(Model.TokenSearchModel.NetworkId))
+                                     },
+                   ColumnCollection = new List<ColumnProperty>()
+                   {
+                       new ColumnProperty("tokenValue")
+                       {
+                           Title = "",
+                           Width = "50",
+                           Render= new RenderCustom("renderToken")
+                       },
+                       new ColumnProperty("tokenDate")
+                       {
+                           Title = "",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("renderDate"),
+                       },
+                       new ColumnProperty("leftTime")
+                       {
+                           Title = "",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("RenderPrevTime"),
+                       }
+                   }
+               })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="token_overview">
+    <div class="inner_token_overview">
+        <div class="row">
+            <div class="col-md-auto">
+                <h4 class="common_heading">Tokens Overview</h4>
+            </div>
+            <div class="col-md">
+                <ul class="nav nav-pills cus_pills"
+                    id="pills-tab"
+                    role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                                type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                            Home
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                            Profile
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            Contact
+                        </button>
+                    </li>
+
+                    <li class="nav-item extra_add_pills" role="presentation">
+                        <button class="nav-link" id="" data-bs-toggle="pill" data-bs-target="" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g opacity="0.4"> <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00001 11.3333C7.26363 11.3333 6.66668 11.9303 6.66668 12.6667C6.66668 13.403 7.26363 14 8.00001 14C8.73639 14 9.33334 13.403 9.33334 12.6667C9.33334 11.9303 8.73639 11.3333 8.00001 11.3333ZM8.00001 6.66667C7.26363 6.66667 6.66668 7.26362 6.66668 8C6.66668 8.73638 7.26363 9.33333 8.00001 9.33333C8.73639 9.33333 9.33334 8.73638 9.33334 8C9.33334 7.26362 8.73639 6.66667 8.00001 6.66667ZM8.00001 2C7.26363 2 6.66668 2.59695 6.66668 3.33333C6.66668 4.06971 7.26363 4.66667 8.00001 4.66667C8.73639 4.66667 9.33334 4.06971 9.33334 3.33333C9.33334 2.59695 8.73639 2 8.00001 2Z" fill="#151A15" /></g>
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tab-content cus_tab_content" id="pills-tabContent">
+            <div class="tab-pane fade show active"
+                 id="pills-home"
+                 role="tabpanel"
+                 aria-labelledby="pills-home-tab">
+                <div class="inner_tab_content">
+                    <div class="table_bg">
+                        @Html.AntiForgeryToken()
+                        @await Html.PartialAsync("GridTable", new DataTablesModel()
+                   {
+                       Name = "Token-Overview-grid",
+                       UrlRead = Url.RouteUrl("GetTokenOverview"),
+                       Length = OrderlyDefaults.GridDefaultPageSize,
+                       LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                       Filters = new List<FilterParameter>()
+                       {
+                           new FilterParameter(nameof(Model.TokenSearchModel.PrevDays)),
+                           new FilterParameter(nameof(Model.TokenSearchModel.NetworkId))
+                       },
+                       ColumnCollection = new List<ColumnProperty>()
+                               {
+                       new ColumnProperty("tokenName")
+                       {
+                           Title = "Name",
+                           Width = "50"//,
+                           //Render= new RenderCustom("renderToken")
+                       },
+                       new ColumnProperty("tokenPrice")
+                       {
+                           Title = "Price",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("renderTokenPrice"),
+                       },
+                       new ColumnProperty("tokenUpDown")
+                       {
+                           Title = "24H",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("render24HPrice"),
+                           },
+                        new ColumnProperty("tokenHolding")
+                       {
+                           Title = "Holding",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("renderHolding"),
+                           },
+                         new ColumnProperty("tokenProfitLoss")
+                       {
+                           Title = "Profit/Loss",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("renderPL"),
+                           },
+                          new ColumnProperty("id")
+                       {
+                           Title = "Action",
+                           Width = "100",
+                           ClassName="text-start",
+                           Render = new RenderCustom("renderAction"),
+                           }
+                       }
+                        })
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade"
+                 id="pills-profile"
+                 role="tabpanel"
+                 aria-labelledby="pills-profile-tab">
+                <div>
+
+                </div>
+            </div>
+            <div class="tab-pane fade"
+                 id="pills-contact"
+                 role="tabpanel"
+                 aria-labelledby="pills-contact-tab">
+                ...
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="right_panel">
+    <div class="inner_right_panel">
+        <div class="slide_btn">
+            <svg width="20"
+                 height="40"
+                 viewBox="0 0 20 40"
+                 fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 4C0 1.79086 1.79086 0 4 0H20V40H4C1.79086 40 0 38.2091 0 36V4Z"
+                      fill="white" />
+                <path opacity="0.16"
+                      d="M9 12L12 20L9 28"
+                      stroke="#08101F"
+                      stroke-width="1.2"
+                      stroke-linecap="round" />
+            </svg>
+        </div>
+        <div class="assets_balance">
+            <ol>
+                <li>
+                    <span class="assets_name">Assets Balance</span>
+                    <span class="card_down">
+                        <svg width="16"
+                             height="16"
+                             viewBox="0 0 16 16"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.42678 7.42678L7.82326 10.8232C7.92089 10.9209 8.07918 10.9209 8.17681 10.8232L11.5732 7.42678C11.7307 7.26928 11.6192 7 11.3964 7H4.60356C4.38083 7 4.26929 7.26929 4.42678 7.42678Z"
+                                  fill="#24292E" />
+                        </svg>
+                    </span>
+                </li>
+                <li class="for_margin">
+                    <span class="main_price">$@Model.AssetBalance</span>
+                    <span class="sub_percentage">@Html.Raw(Model.UpDownPercentage)</span>
+                </li>
+                <li><span class="total_price">@Model.LastTwentyHoursDifference</span></li>
+            </ol>
+        </div>
+        @await Html.PartialAsync("_pieChart")
+       
+        <a href="" class="setup_portfolio_btn">Setup Portfolio</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#wallet").kendoMultiSelect({
+            animation: {
+                open: {
+                    effects: "zoom:in",
+                    duration: 300
+                }
+            }
+        });
+        var multiselect = $("#wallet").data("kendoMultiSelect");
+      
+        $('#wallet').on('change', function () {
+            var selectedValues = $(this).val();
+            var result = $.inArray(0, selectedValues);
+            if ($.inArray('0', selectedValues) >= 0) {
+                multiselect.value(["0"]);
+            } 
+            var value = multiselect.value();
+            $("#NetworkId").val(value);
+            window.location.href = '@Url.RouteUrl("Home")' + "?v=" + value;
+        });
+    });
+
+    function changeNextDays(obj) {
+        var value = $(obj).val();
+        $("#NextDays").val(value);
+        refresh_Wallet_Upcoming_Token_grid();
+    }
+
+    function changePrevDays(obj) {
+        var value = $(obj).val();
+        $("#PrevDays").val(value);
+        refresh_Wallet_Previous_Token_grid();
+    }
+
+    function RenderLeftTime(data, type, row, meta) {
+        var days = parseInt(data);
+        if (isNaN(days)) {
+            days = 0;
+        }
+        var label = "Day(s) Left";
+        if (days == 1) {
+            label = "Day Left"
+        }
+        var html =
+            '<div class="action-dots">'
+            + '<span>' + data + '</span> '
+            + '<span>' + label + '</span>'
+            + '</div>'
+        return html;
+    }
+
+    function renderToken(data, type, row, meta) {
+        var html =
+            '<div class="action-dots">'
+            + '<span>$' + data + '</span> '
+            + '<span>' + row.tokenName + '</span>'
+            + '</div>'
+        return html;
+    }
+
+    function renderDate(data, type, row, meta) {
+        var date = new Date(data);
+        var month = date.getMonth() + 1;
+        var formattedDate = date.getDate() + "." + (month.toString().length > 1 ? month : "0" + month) + "." + date.getFullYear();
+        return formattedDate;
+    }
+
+    function RenderPrevTime(data, type, row, meta) {
+        var days = parseInt(data);
+        if (isNaN(days)) {
+            days = 0;
+        }
+        var label = "Day(s) Ago";
+        if (days == 1) {
+            label = "Day Ago"
+        }
+        var html =
+            '<div class="action-dots">'
+            + '<span>' + data + '</span> '
+            + '<span>' + label + '</span>'
+            + '</div>'
+        return html;
+    }
+
+    function renderTokenPrice(data, type, row, meta) {
+        var price = parseFloat(data);
+        if (isNaN(price)) { price = 0; }
+        var html =
+            '<div class="action-dots">'
+            + '<span>$' + price.toFixed(2) + '</span> '
+            + '</div>'
+        return html;
+    }
+
+    function render24HPrice(data, type, row, meta) {
+        var price = parseFloat(data);
+        if (isNaN(price)) { price = 0; }
+        var html =
+            '<div class="action-dots">'
+            + '<span>$' + price.toFixed(2) + '</span> '
+            + '</div>'
+        return html;
+    }
+
+    function renderHolding(data, type, row, meta) {
+        var price = parseFloat(data);
+        if (isNaN(price)) { price = 0; }
+        var html =
+            '<div class="action-dots">'
+            + '<span>$' + price.toFixed(2) + '</span> '
+            + '</div>'
+        return html;
+    }
+
+    function renderPL(data, type, row, meta) {
+        var price = parseFloat(data);
+        if (isNaN(price)) { price = 0; }
+        var html =
+            '<div class="action-dots">'
+            + '<span>$' + price.toFixed(2) + '</span> '
+            + '</div>'
+        return html;
+    }
+
+    function renderAction(data, type, row, meta) {
+        var html = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">'
+        html += '<path fill-rule="evenodd" clip - rule="evenodd" d = "M3.76719 14.5062C3.33474 14.8768 2.66666 14.5696 2.66666 14V3.33333C2.66666 2.22876 3.56209 1.33333 4.66666 1.33333H11.3333C12.4379 1.33333 13.3333 2.22876 13.3333 3.33333V14C13.3333 14.5696 12.6653 14.8768 12.2328 14.5062L8 10.8781L3.76719 14.5062Z" fill = "#6B8068" /></svg >'
+        html += '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="notification_icon">'
+        html += '<path d="M13.1797 7.76356C12.6927 7.19486 12.4714 6.70204 12.4714 5.86477V5.58009C12.4714 4.48902 12.2203 3.78604 11.6743 3.08306C10.8328 1.99133 9.41625 1.33333 8.02948 1.33333H7.97051C6.6129 1.33333 5.24071 1.96112 4.38466 3.00854C3.80889 3.72562 3.52862 4.45881 3.52862 5.58009V5.86477C3.52862 6.70204 3.32189 7.19486 2.82032 7.76356C2.45127 8.18253 2.33333 8.72101 2.33333 9.3038C2.33333 9.88727 2.52482 10.4399 2.90911 10.889C3.41068 11.4275 4.11897 11.7713 4.8425 11.831C5.89003 11.9506 6.93756 11.9955 8.00033 11.9955C9.06244 11.9955 10.11 11.9203 11.1582 11.831C11.881 11.7713 12.5893 11.4275 13.0909 10.889C13.4745 10.4399 13.6667 9.88727 13.6667 9.3038C13.6667 8.72101 13.5487 8.18253 13.1797 7.76356Z" fill="#6B8068" />'
+        html += '<path opacity="0.4" d="M9.33913 12.8189C9.00585 12.7477 6.97506 12.7477 6.64179 12.8189C6.35688 12.8847 6.04878 13.0378 6.04878 13.3735C6.06535 13.6938 6.25286 13.9764 6.51258 14.1557L6.51192 14.1564C6.84785 14.4182 7.24208 14.5848 7.65486 14.6445C7.87484 14.6747 8.09879 14.6734 8.32671 14.6445C8.73883 14.5848 9.13307 14.4182 9.46899 14.1564L9.46833 14.1557C9.72806 13.9764 9.91557 13.6938 9.93213 13.3735C9.93213 13.0378 9.62403 12.8847 9.33913 12.8189Z" fill="#6B8068" /></svg>';
+        return html;
+    }
+
+    
+</script>

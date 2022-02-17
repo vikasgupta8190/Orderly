@@ -1,0 +1,32 @@
+[
+  {
+    "outputFileName": "wwwroot/js/monitoring.min.js",
+    "inputFiles": [
+      "wwwroot/js/monitoring.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/analyzer.min.js",
+    "inputFiles": [
+      "wwwroot/js/analyzer.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/contact.min.js",
+    "inputFiles": [
+      "wwwroot/js/contact.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/distributor.min.js",
+    "inputFiles": [
+      "wwwroot/js/distributor.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/setup-portfolio-monitoring.min.js",
+    "inputFiles": [
+      "wwwroot/js/setup-portfolio-monitoring.js"
+    ]
+  }
+]

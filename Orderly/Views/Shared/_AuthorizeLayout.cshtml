@@ -1,0 +1,86 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/css/font-awesome5/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/data-table/DataTables-1.11.3/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/data-table/Buttons-2.0.1/css/buttons.bootstrap5.min.css" />
+    <link rel="stylesheet" href="~/css/main.css" />
+    <link rel="stylesheet" href="~/css/responsive.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />
+    <link href="~/css/fstdropdown.css" rel="stylesheet" />
+
+    <link href="~/css/kendo.default-v2.min.css" rel="stylesheet" />
+    @*<link rel="stylesheet"  href="~/css/multi-select.css" />*@
+
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery-3.6.0.js"></script>
+    <script src="~/js/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+    @*<script src="~/js/multi-select.js"></script>*@
+    <script src="~/js/modernizr-2.8.3.js"></script>
+    <script src="~/js/comman.js"></script>
+    <script src="~/js/kendo.all.min.js"></script>
+    <script type="text/javascript" src="~/lib/data-table/DataTables-1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="~/lib/data-table/DataTables-1.11.3/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" src="~/lib/moment/min/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="~/lib/data-table/Buttons-2.0.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="~/lib/data-table/Buttons-2.0.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="~/js/fstdropdown.js"></script>
+    <script type="text/javascript" src="~/js/piechart.js"></script>
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div id="ajaxLoader" style="display:none" class="h-100 row align-items-center">
+        <div class="col d-flex justify-content-center">
+            <div class="spinner-border fast text-danger" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    </div>    
+    <section class="main_wrapper">
+        <div class="outer_panel">
+            <div class="left_panel">
+                @await Html.PartialAsync("_SideMenu")
+            </div>                
+                @RenderBody()
+        </div>
+    </section>
+    @if (IsSectionDefined("RightPopup"))
+    {
+        @RenderSection("RightPopup")
+    }
+    <script>
+        jQuery(".slide_btn").click(function () {
+            jQuery(".right_panel").toggleClass("slide_right_panel");
+        });
+        $(document).ready(function () {
+            $("#nav-icon3").click(function () {
+                $(this).toggleClass("open");
+            });
+            $("#nav-icon3").click(function () {
+                $(".left_panel").toggleClass("slide_left_panel");
+            });
+        });
+
+        function pageReload(value) {
+            var seconds = value * 1000;
+            setTimeout(function () { window.location.reload(); }, seconds);
+        }
+    </script>
+</body>
+</html>
+
+<style>
+    div#ajaxLoader {
+        position: fixed;
+        z-index: 99999999;
+        background: #00000073;
+        width: 100%;
+    }
+</style>

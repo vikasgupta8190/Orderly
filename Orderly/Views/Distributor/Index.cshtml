@@ -1,0 +1,193 @@
+﻿@model ContactModel
+@{
+    ViewBag.Title = "Distributor";
+    Layout = "~/Views/Shared/_AuthorizeLayout.cshtml";
+}
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications")
+<div class="container cus_container">
+    <div class="upper_heading">
+        <div class="row align-items-center">
+            <div class="col-md-auto">
+                <h4 class="common_heading">Distributor</h4>
+            </div>
+            <div class="col-md">
+                @Html.HiddenFor(x => x.SearchModel.FilterType, new { id = "FilterType" })
+                <ul class="all_wallets">
+                    <li>
+                        <a href="javascript:void(0)" class="notification_message">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M8 1.5C4.41015 1.5 1.5 4.41015 1.5 8C1.5 11.5899 4.41015 14.5 8 14.5C11.5899 14.5 14.5 11.5899 14.5 8C14.5 4.41015 11.5899 1.5 8 1.5ZM0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8ZM9 11C9 11.5523 8.55229 12 8 12C7.44772 12 7 11.5523 7 11C7 10.4477 7.44772 10 8 10C8.55229 10 9 10.4477 9 11ZM6.92082 6.08541C7.00133 5.92438 7.11032 5.78617 7.25977 5.68654C7.40453 5.59004 7.63124 5.5 8 5.5C8.27975 5.5 8.55291 5.58656 8.7375 5.725C8.90206 5.84842 9 6.01009 9 6.25C9 6.42662 8.95919 6.51381 8.92283 6.56835C8.87748 6.63639 8.79924 6.71162 8.64646 6.81349C8.57007 6.86441 8.48788 6.9139 8.38754 6.97411L8.38141 6.97779L8.38139 6.9778C8.28769 7.03402 8.17704 7.10041 8.06831 7.1729C7.84608 7.32107 7.58057 7.52712 7.37593 7.83412C7.14619 8.17878 7.23935 8.64442 7.58401 8.87417C7.92867 9.10391 8.39432 9.01075 8.62406 8.66609C8.66942 8.59803 8.74766 8.52279 8.90043 8.42093C8.97681 8.37001 9.059 8.32052 9.15933 8.26032L9.16554 8.25659L9.1656 8.25656C9.25926 8.20036 9.36986 8.134 9.47854 8.06154C9.70075 7.91339 9.96627 7.70737 10.1709 7.4004C10.3846 7.07994 10.5 6.69838 10.5 6.25C10.5 5.48991 10.1396 4.90158 9.6375 4.525C9.15542 4.16344 8.55358 4 8 4C7.36876 4 6.84547 4.15996 6.42772 4.43846C6.01467 4.71383 5.74866 5.07562 5.57918 5.41459C5.39393 5.78507 5.5441 6.23558 5.91459 6.42082C6.28507 6.60606 6.73558 6.45589 6.92082 6.08541Z"
+                                      fill="#687780" />
+                            </svg>
+                            <p data-bs-toggle="modal" data-bs-target="#contactModal" data-bs-id="1">
+                                You can set up Addresses & Group in
+                                <strong class="contact_color">Contacts</strong>
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" id="distributePopup" class="common_btn">Distribute</a>
+                    </li>
+                </ul>
+                <div class="all_wallets mt-3" id="distribute_popup_model" style="display:none">
+                    <div class="distribute_popup_model">
+                        <ul>
+                            <li><label><a href="https://disperse.app/">disperse.app</a></label></li>
+                            <li><label><a href="https://bulksender.app/">bulksender.app</a></label></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="price_cards">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="inner_price_card">
+                    <h5>Total distributed</h5>
+                    <h6 id="total-distributed"></h6>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="inner_price_card">
+                    <h5>To be distributed</h5>
+                    <h6 id="to-be-distributed"></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="token_form"></div>
+    <ul class="nav nav-pills cus_pills row" id="pills-tab" role="tablist">
+        <li class="nav-item col-1" role="presentation">
+            <button class="nav-link active" onclick="distributor.setFilter('All');" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                All
+            </button>
+        </li>
+        <li class="nav-item col-1" role="presentation">
+            <button class="nav-link" onclick="distributor.setFilter('In');" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                In
+            </button>
+        </li>
+        <li class="nav-item col-1" role="presentation">
+            <button class="nav-link" onclick="distributor.setFilter('Out');" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                Out
+            </button>
+        </li>
+
+        <li class="nav-item col-2">
+            @Html.DropDownListFor(x => x.SearchModel.TokensType, Model.SearchModel.AvailableTokensTypes, new { @class = "form-control", id = "TokensType", onchange = "refresh_transaction_details_grid();" })
+        </li>
+
+        <li class="nav-item col-3">
+            @Html.TextBoxFor(x => x.SearchModel.AnyPeriod, new { @class = "form-control", id = "AnyPeriod", type = "date", onchange = "refresh_transaction_details_grid();" })
+        </li>
+        <li class="nav-item col-4">
+            @Html.TextBoxFor(x => x.SearchModel.Address, new { @class = "form-control", id = "Address",placeholder= "Search Address", onfocusout = "distributor.getAddress()" })
+        </li>
+
+    </ul>
+
+
+    <div class="tab-content cus_tab_content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="inner_tab_content">
+                <div class="table_bg small_font_table">
+                    <div class="table-responsive">
+                        <form asp-controller="Distributor" asp-action="Index">
+                            @await Html.PartialAsync("GridTable", new DataTablesModel()
+                       {
+                           Name = "transaction-details-grid",
+                           UrlRead = Url.RouteUrl("TransactionList"),
+                           Length = OrderlyDefaults.GridDefaultPageSize,
+                           LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                           SearchButtonId = "search-contact",
+                           AfterSuccess = "distributor.bindTotalDistributedAndToBeDistributedCount",
+                           Filters = new List<FilterParameter>()
+                             {
+                                 new FilterParameter(nameof(Model.SearchModel.FilterType)),
+                                 new FilterParameter(nameof(Model.SearchModel.AnyPeriod)),
+                                 new FilterParameter(nameof(Model.SearchModel.TokensType)),
+                                 new FilterParameter(nameof(Model.SearchModel.Address))
+                             },
+                           ColumnCollection = new List<ColumnProperty>()
+                              {
+                                  new ColumnProperty("tansactionHashCode")
+                                  {
+                                      Title = T("TansactionHashCode").Value,
+                                      Width = "50",
+                                      Render=new RenderCustom("distributor.renderHexWithDots")
+                                  },
+                                  new ColumnProperty("date")
+                                  {
+                                      Title = T("Date").Value,
+                                      Width = "50",
+                                      Render= new RenderDate()
+                                  },
+                                  new ColumnProperty("from")
+                                  {
+                                      Title = T("From").Value,
+                                      Width = "50",
+                                      Render=new RenderCustom("distributor.renderHexWithDots")
+                                  },
+                                  new ColumnProperty("to")
+                                  {
+                                     Title = T("To").Value,
+                                     Width = "50",
+                                     Render = new RenderCustom("distributor.renderToDiv"),
+
+                                  },
+                                  new ColumnProperty("quantity")
+                                  {
+                                     Title = T("Quantity").Value,
+                                     Width = "20",
+                                    Render = new RenderCustom("distributor.renderQuantity"),
+                                     ClassName="text-end f_600"
+                                  }
+                              }
+                       })
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="tab-pane fade"
+                 id="pills-profile"
+                 role="tabpanel"
+                 aria-labelledby="pills-profile-tab">
+                ...
+            </div>
+            <div class="tab-pane fade"
+                 id="pills-contact"
+                 role="tabpanel"
+                 aria-labelledby="pills-contact-tab">
+                ...
+            </div>*@
+    </div>
+</div>
+</div>
+
+@section RightPopup{
+    @await Html.PartialAsync("_AddContact", Model)
+}
+<div class="d-none address-div" id="address-div">
+    <div class="address-inner-div" data-id="0">
+        <a href="javascript:void(0)" onclick="removeAddress(null,this)" class="cus_cross_icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z" /></svg>
+        </a>
+        <div class="form-field">
+            <input type="text" class="form-control" data-target="address" pattern="/^0x[a-fA-F0-9]{40}$/" onblur="validate(this)" required="required" aria-describedby="emailHelp" placeholder="Address" />
+            <span class="validation"></span>
+        </div>
+        <div class="form-field">
+            <input type="text" class="form-control" data-target="alies" aria-describedby="emailHelp" placeholder="Address Alias (Optional)" />
+        </div>
+        <div class="cus_divider"></div>
+    </div>
+</div>
+<script src="~/js/distributor.min.js"></script>
+<script>
+    distributor.init('@Url.RouteUrl("SaveDistributorAddress")','@Html.IdFor(x => x.GroupIds)')
+</script>
+

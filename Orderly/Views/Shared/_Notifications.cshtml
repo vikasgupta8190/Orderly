@@ -1,0 +1,47 @@
+﻿@using Newtonsoft.Json
+@using Orderly.Models.Messages
+@{
+    //Get messages from TempData
+    var notes = TempData.ContainsKey(OrderlyDefaults.NotificationListKey)
+        ? JsonConvert.DeserializeObject<IList<NotifyData>>(TempData[OrderlyDefaults.NotificationListKey].ToString())
+        : null;
+    if (notes != null)
+    {
+        foreach (var note in notes)
+        {
+            var cssStyle = "";
+            switch (note.Type)
+            {
+                case NotifyType.Success:
+                    cssStyle = "alert-success";
+                    break;
+                case NotifyType.Error:
+                    cssStyle = "alert-danger";
+                    break;
+                case NotifyType.Warning:
+                    cssStyle = "alert-warning";
+                    break;
+            }
+            <div class="alert @cssStyle alert-dismissible fade show mb-0 lineheight_1_5 cust_alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                @if (note.Encode)
+                {
+                    <text>
+                        @note.Message
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        @Html.Raw(note.Message)
+                    </text>
+                }
+            </div>
+            <script>
+                setTimeout(function () {
+                    $('.alert').fadeOut('slow');               
+                }, 3000);
+            </script>
+        }
+    }
+}

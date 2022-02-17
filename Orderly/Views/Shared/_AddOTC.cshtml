@@ -1,0 +1,245 @@
+﻿@model OTCModel
+@{
+    bool view = ViewBag.ViewModeEnable == null ? false : ViewBag.ViewModeEnable;
+}
+<form asp-action="AddOTC" id="new-otc" asp-controller="OTC" method="post">
+    <div class="modal fade cus_right_modal cus_address_add_modal add_new_investment"
+         id="otcModal"
+         tabindex="-1"
+         data-bs-backdrop="static"
+         data-bs-keyboard="false"
+         aria-labelledby="otcModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                @Html.HiddenFor(x => x.Id)
+                <div class="modal-header">
+                    @if (!view)
+                    {
+                        <h4 class="common_heading">@T("AddNewOTC")</h4>
+                    }
+                    else
+                    {
+                        <h4 class="common_heading">View OTC</h4>
+                    }
+
+                    @if (!view)
+                    {
+                        <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.57999 5.57998C5.79092 5.36931 6.07686 5.25097 6.37499 5.25097C6.67311 5.25097 6.95904 5.36931 7.16999 5.57998L12 10.41L16.83 5.57998C16.933 5.46945 17.0572 5.3808 17.1952 5.31931C17.3332 5.25783 17.4822 5.22477 17.6332 5.2221C17.7843 5.21943 17.9343 5.24722 18.0744 5.3038C18.2145 5.36038 18.3417 5.44459 18.4485 5.55142C18.5554 5.65825 18.6396 5.78551 18.6961 5.92558C18.7527 6.06567 18.7806 6.21571 18.7779 6.36676C18.7752 6.51783 18.7422 6.66679 18.6807 6.80479C18.6192 6.94279 18.5305 7.06699 18.42 7.16998L13.59 12L18.42 16.83C18.5305 16.933 18.6192 17.0572 18.6807 17.1952C18.7422 17.3332 18.7752 17.4822 18.7779 17.6332C18.7806 17.7843 18.7527 17.9343 18.6961 18.0744C18.6396 18.2145 18.5554 18.3417 18.4485 18.4485C18.3417 18.5554 18.2145 18.6396 18.0744 18.6961C17.9343 18.7527 17.7843 18.7806 17.6332 18.7779C17.4822 18.7752 17.3332 18.7422 17.1952 18.6807C17.0572 18.6192 16.933 18.5305 16.83 18.42L12 13.59L7.16999 18.42C6.95672 18.6187 6.67464 18.7269 6.38319 18.7218C6.09174 18.7165 5.81367 18.5985 5.60754 18.3924C5.40143 18.1863 5.28336 17.9082 5.27822 17.6167C5.27307 17.3253 5.38127 17.0433 5.57999 16.83L10.41 12L5.57999 7.16998C5.36931 6.95905 5.25098 6.67311 5.25098 6.37498C5.25098 6.07686 5.36931 5.79093 5.57999 5.57998Z"
+                                      fill="#24292E" />
+                            </svg>
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close" onclick="window.location = '@Url.RouteUrl("OTC")'">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.57999 5.57998C5.79092 5.36931 6.07686 5.25097 6.37499 5.25097C6.67311 5.25097 6.95904 5.36931 7.16999 5.57998L12 10.41L16.83 5.57998C16.933 5.46945 17.0572 5.3808 17.1952 5.31931C17.3332 5.25783 17.4822 5.22477 17.6332 5.2221C17.7843 5.21943 17.9343 5.24722 18.0744 5.3038C18.2145 5.36038 18.3417 5.44459 18.4485 5.55142C18.5554 5.65825 18.6396 5.78551 18.6961 5.92558C18.7527 6.06567 18.7806 6.21571 18.7779 6.36676C18.7752 6.51783 18.7422 6.66679 18.6807 6.80479C18.6192 6.94279 18.5305 7.06699 18.42 7.16998L13.59 12L18.42 16.83C18.5305 16.933 18.6192 17.0572 18.6807 17.1952C18.7422 17.3332 18.7752 17.4822 18.7779 17.6332C18.7806 17.7843 18.7527 17.9343 18.6961 18.0744C18.6396 18.2145 18.5554 18.3417 18.4485 18.4485C18.3417 18.5554 18.2145 18.6396 18.0744 18.6961C17.9343 18.7527 17.7843 18.7806 17.6332 18.7779C17.4822 18.7752 17.3332 18.7422 17.1952 18.6807C17.0572 18.6192 16.933 18.5305 16.83 18.42L12 13.59L7.16999 18.42C6.95672 18.6187 6.67464 18.7269 6.38319 18.7218C6.09174 18.7165 5.81367 18.5985 5.60754 18.3924C5.40143 18.1863 5.28336 17.9082 5.27822 17.6167C5.27307 17.3253 5.38127 17.0433 5.57999 16.83L10.41 12L5.57999 7.16998C5.36931 6.95905 5.25098 6.67311 5.25098 6.37498C5.25098 6.07686 5.36931 5.79093 5.57999 5.57998Z"
+                                      fill="#24292E" />
+                            </svg>
+                        </button>
+                    }
+
+                </div>
+                <div class="modal-body">
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.Type, new { @class = "form-label" })
+                        @if (view)
+                        {
+                            @Html.DropDownListFor(x => x.Type, Model.TypeList, new { @class = "form-select", @readonly = "readonly" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(x => x.Type, Model.TypeList, new { @class = "form-select" })
+                        }
+
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.TokenId, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.DropDownListFor(x => x.TokenId, Model.TokenList, "Select Token", new { @class = "form-select", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(x => x.TokenId, Model.TokenList, "Select Token", new { @class = "form-select" })
+                    }
+                </div>
+                    @Html.ValidationMessageFor(m => m.TokenId, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.TokenQty, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.TokenQty, new { @class = "form-control", type = "number", min = "1", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.TokenQty, new { @class = "form-control", type = "number", min = "1" })
+                    }
+
+                </div>
+                    @Html.ValidationMessageFor(m => m.TokenQty, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.Lockup, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.Lockup, new { @class = "form-control", type = "number", step = ".01", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Lockup, new { @class = "form-control", type = "number", step = ".01" })
+                    }
+
+                </div>
+                    @Html.ValidationMessageFor(m => m.Lockup, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.Vesting, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.Vesting, new { @class = "form-control", type = "number", step = ".01", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Vesting, new { @class = "form-control", type = "number", step = ".01" })
+                    }
+                </div>
+                    @Html.ValidationMessageFor(m => m.Vesting, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.PricePerToken, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.PricePerToken, new { @class = "form-control", type = "number", step = ".01", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.PricePerToken, new { @class = "form-control", type = "number", step = ".01" })
+                    }
+                </div>
+                    @Html.ValidationMessageFor(m => m.PricePerToken, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.TotalAmount, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.TotalAmount, new { @class = "form-control", type = "number", step = ".01", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.TotalAmount, new { @class = "form-control", type = "number", step = ".01" })
+                    }
+                </div>
+                    @Html.ValidationMessageFor(m => m.TotalAmount, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.Currency, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.Currency, new { @class = "form-control", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Currency, new { @class = "form-control"})
+                    }
+                </div>
+                    @Html.ValidationMessageFor(m => m.Currency, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.ContactDetails, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.ContactDetails, new { @class = "form-control", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.ContactDetails, new { @class = "form-control" })
+                    }
+                </div>
+                    @Html.ValidationMessageFor(m => m.ContactDetails, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.TelegramUsername, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.TelegramUsername, new { @class = "form-control", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.TelegramUsername, new { @class = "form-control" })
+                    }
+                </div>
+                    @Html.ValidationMessageFor(m => m.TelegramUsername, "", new { @class = "text-danger validation" })
+
+                <div class="cus_field">
+                    @Html.LabelFor(x => x.Email, new { @class = "form-label" })
+                    @if (view)
+                    {
+                        @Html.TextBoxFor(x => x.Email, new { @class = "form-control", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Email, new { @class = "form-control"})
+                    }
+                </div>
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger validation" })
+                </div>
+                @if (!view)
+{
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn cus_cancel"
+                                data-bs-dismiss="modal">
+                            @T("Cancel")
+                        </button>
+                        <button type="submit" class="btn cus_save"> @T("Save")</button>
+                    </div>
+}
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#new-otc').submit(function (e) {
+            e.preventDefault();
+            var url = $('#new-otc').attr('action');
+            ajaxRequests.POST(
+                url,
+                $('#new-otc').serialize(),
+                (response) => {
+                    if (response.success) {
+                        refresh_OTC_list();
+                        $('#new-otc').trigger("reset");
+                    }
+                    orderlyNotification.getNotificaitonHtml();
+                },
+                (error) => {
+                }
+            )
+        });
+    });
+
+    $('#@Html.IdFor(x=>x.TokenQty), #@Html.IdFor(x=>x.PricePerToken)').on('change', function () {
+        getTotalAmount();
+    })
+    $('#@Html.IdFor(x=>x.TokenQty), #@Html.IdFor(x=>x.PricePerToken)').keyup(function () {
+        getTotalAmount();
+    })
+
+    function getTotalAmount() {        
+        var quantity = $('#@Html.IdFor(x=>x.TokenQty)').val();
+        var price = $('#@Html.IdFor(x=>x.PricePerToken)').val();
+        if (quantity > 0.0
+            && price > 0.0)
+        {
+            $('#@Html.IdFor(x=>x.TotalAmount)').val((price * quantity).toFixed(2));
+        }
+    }
+</script>

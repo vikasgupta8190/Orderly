@@ -1,0 +1,147 @@
+﻿@model InvestmentAnalyzerModel
+@{
+    ViewBag.Title = "Investment Manager";
+    Layout = "~/Views/Shared/_AuthorizeLayout.cshtml";
+}
+
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications")
+<div class="container cus_container">
+    <div class="upper_heading">
+        <div class="row align-items-center">
+            <div class="col-md-auto">
+                <h4 class="common_heading">Analyzer</h4>
+            </div>
+            @Html.HiddenFor(x => x.SearchModel.FilterType, new { id = "FilterType" })
+            @Html.HiddenFor(x => x.SearchModel.FilterValue, new { id = "FilterValue" })
+            <div class="col-md">
+                <div class="analyzer_search">
+                    <select class="form-select"
+                            aria-label="Default select example" onchange="analyzer.filters(this)">
+                        <option selected>Filters</option>
+                        <option value="1">Address</option>
+                        <option value="2">Network</option>
+                        <option value="3">Token</option>
+                    </select>
+
+                    <select class="form-select d-none" aria-label="Default select example" id="filtersValues" onchange="analyzer.filterTypeOptions(this)">
+                    </select>
+
+                    <div class="search_outer">
+                        @Html.TextBoxFor(x => x.SearchModel.Keyword, new { @class = "form-control", placeholder = "Search", id = "Keyword" })
+                        <button type="button" class="btn" id="btnSearch" onclick="refresh_analyzer_grid()">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4999 6.9999C11.4999 7.59084 11.3835 8.17601 11.1573 8.72197C10.9312 9.26794 10.5997 9.76401 10.1819 10.1819C9.76401 10.5997 9.26794 10.9312 8.72197 11.1574C8.17601 11.3835 7.59085 11.4999 6.9999 11.4999C6.40895 11.4999 5.82379 11.3835 5.27782 11.1574C4.73186 10.9312 4.23578 10.5997 3.81792 10.1819C3.40005 9.76401 3.06859 9.26794 2.84244 8.72197C2.61629 8.17601 2.4999 7.59084 2.4999 6.9999C2.4999 5.80642 2.974 4.66183 3.81792 3.81792C4.66183 2.974 5.80642 2.4999 6.9999 2.4999C8.19337 2.4999 9.33796 2.974 10.1819 3.81792C11.0258 4.66183 11.4999 5.80642 11.4999 6.9999ZM10.6799 11.7399C9.47428 12.6759 7.95727 13.1172 6.4377 12.974C4.91813 12.8309 3.51024 12.114 2.50065 10.9693C1.49105 9.82461 0.955652 8.33819 1.00343 6.81265C1.05122 5.2871 1.6786 3.8371 2.75785 2.75785C3.83711 1.6786 5.2871 1.05122 6.81265 1.00343C8.3382 0.955649 9.82461 1.49105 10.9693 2.50065C12.114 3.51024 12.8309 4.91813 12.974 6.4377C13.1172 7.95726 12.6759 9.47427 11.7399 10.6799L14.7799 13.7199C14.8536 13.7886 14.9127 13.8714 14.9537 13.9634C14.9947 14.0554 15.0167 14.1547 15.0185 14.2554C15.0203 14.3561 15.0017 14.4561 14.964 14.5495C14.9263 14.6429 14.8701 14.7277 14.7989 14.7989C14.7277 14.8702 14.6429 14.9263 14.5495 14.964C14.4561 15.0017 14.3561 15.0203 14.2554 15.0185C14.1547 15.0167 14.0553 14.9947 13.9634 14.9537C13.8714 14.9127 13.7886 14.8536 13.7199 14.7799L10.6799 11.7399Z" fill="white" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="analyzer_chart">@await Html.PartialAsync("_AnalyzerChart")</div>
+        </div>
+        <div class="col-md-4">
+            <div class="price_cards">
+                <div class="inner_price_card">
+                    <h5>
+                        Invested Amount <span class="cus_time">WHOLE TIME</span>
+                    </h5>
+                    <h6 id="wholeInvestedAmount"></h6>
+                </div>
+            </div>
+            <div class="price_cards pc_mt">
+                <div class="inner_price_card">
+                    <h5>
+                        Invested Amount <span class="cus_time">WHOLE TIME</span>
+                    </h5>
+                    <h6>
+                        <span id="currentAmountOfInvestedAmt"></span>
+                        <span class="percent_up" id="profit-loss"></span>
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            @Html.AntiForgeryToken()
+            <div class="table_bg contact_table" id="table_contacts">
+                <div class="table-responsive">
+                    @await Html.PartialAsync("GridTable", new DataTablesModel()
+               {
+                   Name = "analyzer-grid",
+                   UrlRead = Url.RouteUrl("InvestmentAnalyerList"),
+                   Length = OrderlyDefaults.GridDefaultPageSize,
+                   LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+                   AfterSuccess = "analyzer.bindTotalInvestedAmount",
+                   SearchButtonId = "search-investment",
+                   Filters = new List<FilterParameter>()
+                             {
+                                 new FilterParameter(nameof(Model.SearchModel.FilterType)),
+                                 new FilterParameter(nameof(Model.SearchModel.FilterValue)),
+                                 new FilterParameter(nameof(Model.SearchModel.Keyword))
+                             },
+                   ColumnCollection = new List<ColumnProperty>()
+                   {
+                       new ColumnProperty("updatedOnDateTimeUTC")
+                       {
+                           Title = T("DateUTC").Value,
+                           Width = "50",
+                           Render= new RenderDate()
+                       },
+                       new ColumnProperty("investedAmount")
+                       {
+                           Title = T("InvestedAmount").Value,
+                           Width = "100",
+                           Render= new RenderCustom("analyzer.renderInvestedAmountWithPriceAndQuantity")
+                       },
+                       new ColumnProperty("vestingLockup")
+                       {
+                           Title = T("AmountOrPercentageOfLocked").Value,
+                           Width = "100",
+                           ClassName="text-start",
+                           Render= new RenderCustom("analyzer.renderValueWithPercentageSign")
+                       },
+                       new ColumnProperty("investmentTransactionLink")
+                       {
+                           Title = T("Distribution").Value,
+                           Width = "100",
+                           ClassName="text-start",
+                           Render= new RenderCustom("analyzer.renderToggleMenuWithSubTable")
+                       }
+                       //,
+                       //new ColumnProperty("id")
+                       //{
+                       //   Title = T("Action").Value,
+                       //   Width = "20",
+                       //   Render = new RenderCustom("RenderSvg"),
+                       //   ClassName="action_btns text-end"
+                       //}
+                   }
+               })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="~/js/analyzer.min.js"></script>
+<script>
+    analyzer.init('@T("Show")','@Url.RouteUrl("DistributionTransactions")','@Url.RouteUrl("FiltersData")')
+    $(document).ready(function () {
+        $("#Keyword").on('keypress', function (e) {
+            if (e.which == 13) {
+                refresh_analyzer_grid();
+            }
+        });
+    });
+</script>
+<style>
+    .investment-grid-icons svg {
+        width: 25px;
+    }
+</style>

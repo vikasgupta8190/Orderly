@@ -1,0 +1,103 @@
+﻿@model List<PortfolioMonitoringType>
+@{
+    ViewBag.Title = "SetupPortfolioMonitoring";
+    Layout = "~/Views/Shared/_PortfolioLayout.cshtml";
+}
+<style>
+    .checkbox-bnb {
+        font-size: 13px;
+    }
+</style>
+<section class="setup_portfolio">
+    <div class="container-lg cus_container">
+        <div class="sp_search">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <h4>Setup Portfolio Monitoring</h4>
+                </div>
+                <div class="col-md-8">
+                    <div class="sp_search_outer">
+                        <input type="text" oninput="setupPortfolioMonitoring.filterPortfolioCards(this)" class="form-control" id="" aria-describedby="emailHelp" placeholder="Search by network name" />
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="sp_search_icon">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4999 6.9999C11.4999 7.59084 11.3835 8.17601 11.1573 8.72197C10.9312 9.26794 10.5997 9.76401 10.1819 10.1819C9.76401 10.5997 9.26794 10.9312 8.72197 11.1574C8.17601 11.3835 7.59085 11.4999 6.9999 11.4999C6.40895 11.4999 5.82379 11.3835 5.27782 11.1574C4.73186 10.9312 4.23578 10.5997 3.81792 10.1819C3.40005 9.76401 3.06859 9.26794 2.84244 8.72197C2.61629 8.17601 2.4999 7.59084 2.4999 6.9999C2.4999 5.80642 2.974 4.66183 3.81792 3.81792C4.66183 2.974 5.80642 2.4999 6.9999 2.4999C8.19337 2.4999 9.33796 2.974 10.1819 3.81792C11.0258 4.66183 11.4999 5.80642 11.4999 6.9999ZM10.6799 11.7399C9.47428 12.6759 7.95727 13.1172 6.4377 12.974C4.91813 12.8309 3.51024 12.114 2.50065 10.9693C1.49105 9.82461 0.955652 8.33819 1.00343 6.81265C1.05122 5.2871 1.6786 3.8371 2.75785 2.75785C3.83711 1.6786 5.2871 1.05122 6.81265 1.00343C8.3382 0.955649 9.82461 1.49105 10.9693 2.50065C12.114 3.51024 12.8309 4.91813 12.974 6.4377C13.1172 7.95726 12.6759 9.47427 11.7399 10.6799L14.7799 13.7199C14.8536 13.7886 14.9127 13.8714 14.9537 13.9634C14.9947 14.0554 15.0167 14.1547 15.0185 14.2554C15.0203 14.3561 15.0017 14.4561 14.964 14.5495C14.9263 14.6429 14.8701 14.7277 14.7989 14.7989C14.7277 14.8702 14.6429 14.9263 14.5495 14.964C14.4561 15.0017 14.3561 15.0203 14.2554 15.0185C14.1547 15.0167 14.0553 14.9947 13.9634 14.9537C13.8714 14.9127 13.7886 14.8536 13.7199 14.7799L10.6799 11.7399Z" fill="#6B8068" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @await Html.PartialAsync("_PortfolioCards", Model)
+    </div>
+</section>
+<div class="setup_bottom_fixed">
+    <div class="container-lg cus_container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                @{
+                    var label = "0 Network Configured";
+                    var configureNetworkCount = Model.Where(x => x.Addresses.Any()).Count();
+                    if (configureNetworkCount == 0 || configureNetworkCount == 1)
+                    {
+                        label =configureNetworkCount + " Network Configured";
+                    }
+                    else
+                    {
+                        label = configureNetworkCount + " Network(s) Configured";
+                    }
+                }
+                <h6>@label</h6>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li><a href="@Url.RouteUrl("Home")" class="skip_step_btn">Skip this step</a></li>
+                    <li>
+                        <a href="@Url.RouteUrl("SetupPortfolio")" class="setup_portfolio_btn">Setup Portfolio</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade cus_right_modal cus_address_add_modal"
+     id="ValidateAddressModal"
+     tabindex="-1"
+     data-bs-backdrop="static"
+     data-bs-id="0"
+     data-bs-portfolio=""
+     data-bs-keyboard="false"
+     aria-labelledby="ValidateAddressModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+<div class="d-none address-div">
+    <div class="address-inner-div" data-id="0">
+        <a href="javascript:void(0)" onclick="setupPortfolioMonitoring.removeAddress(null,this)" class="cus_cross_icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z" /></svg>
+        </a>
+        <div class="form-field">
+            <input type="text" class="form-control" data-target="address" pattern="/^0x[a-fA-F0-9]{40}$/" onblur="setupPortfolioMonitoring.validate(this)" required="required" aria-describedby="emailHelp" placeholder="Address" />
+            <span class="validation"></span>
+        </div>
+        <div class="form-field">
+            <input type="text" class="form-control" data-target="alies" aria-describedby="emailHelp" placeholder="Address Alias (Optional)" />
+        </div>
+        <div class="form-field hiddenBNB d-none">
+            <input type="checkbox" id="chkBNB" class="chkBnb" data-target="bnbCheckbox" />&nbsp;&nbsp;<span class="checkbox-bnb">Add Address For "Binance Smart Chain"</span>
+        </div>
+        <div class="cus_divider"></div>
+    </div>
+</div>
+<script src="~/js/setup-portfolio-monitoring.min.js"></script>
+<script type="text/javascript">
+    setupPortfolioMonitoring.init('@Url.RouteUrl("GetPortfolioCard")',
+        '@T("DeleteConfirmationMessage")',
+        '@Url.RouteUrl("DeletePortfolioMonitoring")',
+        '@Url.RouteUrl("SavePortfolioMonitoring")',
+        '@Url.RouteUrl("ShowAddressPopup")')
+
+    $('.add_address').removeAttr('onclick');
+    $('#ValidateAddressModal').on('hidden.bs.modal', function () { pageReload(0); })
+</script>

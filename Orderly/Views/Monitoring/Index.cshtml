@@ -1,0 +1,232 @@
+﻿@model MonitorModel
+@{
+    ViewBag.Title = "Investmnet Monitoring";
+    Layout = "~/Views/Shared/_AuthorizeLayout.cshtml";
+    var className = !ViewBag.HasMonitoring ? "d-flex align-items-center justify-content-center" : string.Empty;
+    var monitorings = (List<MonitoringType>)ViewBag.DistinctMonitoringNetworks;
+}
+
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications")
+<div class="container cus_container h-100 @className">
+    @if (!ViewBag.HasMonitoring)
+    {
+
+        <div class="w-25">
+            <h4>@T("AddMonitorInfoMessageHeading")</h4>
+            <span>
+                @T("AddMonitorInfoMessage")
+            </span>
+            <a href="javascript:void(0)" class="common_btn" data-bs-toggle="modal" data-bs-target="#monitoringModal">@T("AddMonitor")</a>
+        </div>
+    }
+    else
+    {
+        <div class="upper_heading">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h4 class="common_heading">Monitoring</h4>
+                </div>
+                <div class="col-md-6">
+                    <ul class="all_wallets">
+                        <li>
+                            <a href="javascript:void(0)" class="common_btn" data-bs-toggle="modal" data-bs-target="#monitoringModal">@T("AddMonitor")</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @foreach (var networkId in monitorings.Select(x => x.Id).Distinct())
+        {
+            var network = monitorings.Where(x => x.Id == networkId).FirstOrDefault();
+            <div class="table_section mt-5">
+                <div class="d-flex bg-white p-3 table-border-bottom">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-1">
+                                @Html.Raw(network.Icon)
+                            </div>
+                            <div class="col-11">
+                                <p>@network.Type</p>
+                                <span>@network.Abbreviation</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="d-flex">
+                                    <label for="notification_@network.Id">Notification:</label>
+                                    <div class="form-check form-switch custom_toggle">
+                                        <input class="form-check-input" onchange="monitoring.notification(@network.Id,'monitoring-grid-@network.Id')" type="checkbox" id="notification_@network.Id" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="d-flex">
+                                    <label>Show in portfolio </label>
+                                    @*fas*@
+                                    <i class="far fa-bookmark" onclick="monitoring.showOnPortfolio(this,@network.Id,'monitoring-grid-@network.Id')" id="show_in_portfolio_@network.Id"></i>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <div class="d-flex flex-row-reverse">
+                                    <i class="fas fa-trash" onclick="monitoring.deleteAll(@network.Id)"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table_bg investment_manager">
+                    <div class="table-responsive">
+                        @await Html.PartialAsync("GridTable", new DataTablesModel()
+                   {
+                       Name = "monitoring-grid-" + network.Id + "",
+                       UrlRead = Url.RouteUrl("GetMonitroing") + "?networkId=" + network.Id + "",
+                       Length = OrderlyDefaults.GridDefaultPageSize,
+                       AfterSuccess = "BindFirstRow_" + network.Id,
+                       LengthMenu = OrderlyDefaults.AvailableGridPageSize,              
+                       ColumnCollection = new List<ColumnProperty>()
+                                   {
+                                       new ColumnProperty("addresses")
+                                       {
+                                             Title = "Address",
+                                             Editable=true,
+                                             Width = "50",
+                                             EditType = EditType.String
+                                       },
+                                       new ColumnProperty("token")
+                                       {
+                                             Title = "Token",
+                                             Width = "100"
+                                       },
+                                       new ColumnProperty("incommingTokenNotificationEvent")
+                                       {
+                                             Title = "Incomming Token Notification",
+                                             Width = "10",
+                                             Render= new RenderCustom("monitoring.renderIncommingTokenBellIcon")
+                                       },
+                                       new ColumnProperty("tokenGenerationNotificationEvent")
+                                       {
+                                             Title = "Token Generation Notification",
+                                             Width = "10",
+                                             Render= new RenderCustom("monitoring.renderTokenGenerationBellIcon")
+                                       },
+                                       new ColumnProperty("id")
+                                       {
+                                             Title = "",
+                                             Width = "100",
+                                             Render = new RenderButtonsInlineEdit(),
+                                             ClassName="action_btns text-end"
+                                       }
+                                   }
+                   })
+                        <script>
+                            function BindFirstRow_@(network.Id)(data) {
+                                if (data.enableIncommingTokenNotification)
+                                    $('#notification_@network.Id').prop('checked', true);
+                                else
+                                    $('#notification_@network.Id').prop('checked',false);
+                                if (data.showPortfolio) {
+                                    $('#show_in_portfolio_@network.Id').removeClass('far fa-bookmark');
+                                    $('#show_in_portfolio_@network.Id').addClass('fas fa-bookmark');
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+</div>
+
+@section RightPopup{
+    <form asp-action="SaveMonitoring" id="new-monitoring" asp-controller="Monitoring" method="post">
+        <div class="modal fade cus_right_modal cus_address_add_modal add_new_investment"
+             id="monitoringModal"
+             tabindex="-1"
+             data-bs-backdrop="static"
+             data-bs-keyboard="false"
+             aria-labelledby="monitoringModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="common_heading">@T("AddNewMonitor")</h4>
+                        <button type="button"
+                                class="btn"
+                                data-bs-dismiss="modal"
+                                aria-label="Close">
+                            <svg width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M5.57999 5.57998C5.79092 5.36931 6.07686 5.25097 6.37499 5.25097C6.67311 5.25097 6.95904 5.36931 7.16999 5.57998L12 10.41L16.83 5.57998C16.933 5.46945 17.0572 5.3808 17.1952 5.31931C17.3332 5.25783 17.4822 5.22477 17.6332 5.2221C17.7843 5.21943 17.9343 5.24722 18.0744 5.3038C18.2145 5.36038 18.3417 5.44459 18.4485 5.55142C18.5554 5.65825 18.6396 5.78551 18.6961 5.92558C18.7527 6.06567 18.7806 6.21571 18.7779 6.36676C18.7752 6.51783 18.7422 6.66679 18.6807 6.80479C18.6192 6.94279 18.5305 7.06699 18.42 7.16998L13.59 12L18.42 16.83C18.5305 16.933 18.6192 17.0572 18.6807 17.1952C18.7422 17.3332 18.7752 17.4822 18.7779 17.6332C18.7806 17.7843 18.7527 17.9343 18.6961 18.0744C18.6396 18.2145 18.5554 18.3417 18.4485 18.4485C18.3417 18.5554 18.2145 18.6396 18.0744 18.6961C17.9343 18.7527 17.7843 18.7806 17.6332 18.7779C17.4822 18.7752 17.3332 18.7422 17.1952 18.6807C17.0572 18.6192 16.933 18.5305 16.83 18.42L12 13.59L7.16999 18.42C6.95672 18.6187 6.67464 18.7269 6.38319 18.7218C6.09174 18.7165 5.81367 18.5985 5.60754 18.3924C5.40143 18.1863 5.28336 17.9082 5.27822 17.6167C5.27307 17.3253 5.38127 17.0433 5.57999 16.83L10.41 12L5.57999 7.16998C5.36931 6.95905 5.25098 6.67311 5.25098 6.37498C5.25098 6.07686 5.36931 5.79093 5.57999 5.57998Z"
+                                      fill="#24292E" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-field cus_multiselect">
+                            <label class="form-label">@T("Address")</label>
+                            <select class="valid" name="Ids" id="Ids" multiple>
+                                @foreach (var address in Model.AvailableAddresses)
+                                {
+                                    <option value="@address.Value">@address.Text</option>
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn cus_cancel"
+                                data-bs-dismiss="modal">
+                            @T("Cancel")
+                        </button>
+                        <button type="submit" class="btn cus_save">@T("Save")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Ids').kendoMultiSelect({
+                animation: {
+                    open: {
+                        effects: "zoom:in",
+                        duration: 300
+                    }
+                }
+            });
+        });
+    </script>
+}
+<script src="~/js/monitoring.min.js"></script>
+<script>
+    monitoring.init(
+        '@T("DeleteConfirmationMessage")',
+        '@Url.RouteUrl("DeleteMonitoring")',
+        '@T("AllChangeConfirmation")',
+        '@Url.RouteUrl("UpdateNotification")',
+        '@Url.RouteUrl("TurnOnOffTokenGenerationNotifications")',
+        '@Url.RouteUrl("TurnOnOffIncommingNotifications")',
+        '@Url.RouteUrl("UpdateShowOnPortfolio")'
+    );
+</script>
+<style>
+    .table-border-bottom {
+        border-bottom: 1px solid rgb(8 16 31 / 16%);
+        font-size: 14px;
+    }
+
+        .table-border-bottom svg {
+            height: 30px;
+            width: 30px;
+        }
+</style>

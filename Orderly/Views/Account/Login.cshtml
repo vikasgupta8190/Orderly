@@ -1,0 +1,37 @@
+﻿@model UserLoginModel
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="welcome_left">
+    <h3>Welcome back</h3>
+    <form asp-action="Login" asp-controller="Account" method="post">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x=>x.ReturnUrl)
+        <div class="form-field">
+            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger validation" })
+        </div>
+        <div class="form-field">
+            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger validation" })
+        </div>
+        <button type="submit" class="btn login-btn">Login</button>
+        @Html.ValidationMessage("message", new { @class = "text-danger" })
+        @if (ViewBag.EmailNotConfirmed != null)
+        {
+           <span class="email-not-confirmed">@Html.Raw(ViewBag.EmailNotConfirmed)</span>
+        }
+        <h5>Have not an account?<a href="@Url.RouteUrl("Signup")"> Sign Up</a></h5>
+        <h6><a href="@Url.RouteUrl("ForgotPassword")"> Forgot your password?</a></h6>
+
+    </form>
+
+    <svg width="480" height="84" viewBox="0 0 480 84" fill="none" xmlns="http://www.w3.org/2000/svg" class="vector_cus">
+        <rect opacity="0.03" y="35.4592" width="92" height="63.0386" fill="white" />
+        <rect opacity="0.03" x="291" y="35.4592" width="92" height="63.0386" fill="white" />
+        <rect opacity="0.03" x="388" y="14.4463" width="92" height="84.0515" fill="white" />
+        <rect opacity="0.03" x="97" y="14.4463" width="92" height="84.0515" fill="white" />
+        <rect opacity="0.08" x="194" width="92" height="102" fill="white" />
+    </svg>
+</div>

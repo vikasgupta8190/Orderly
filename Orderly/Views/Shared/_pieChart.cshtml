@@ -1,0 +1,43 @@
+﻿<div id="donutchart"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {       
+        loadChartData();
+    });
+
+    var chartData = [['Token', 'AmountInvested']];
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable(chartData);
+        var options = {
+            title: '',
+            pieHole: 0.4,
+            chartArea: { width: 150, height: 150 },
+            legend: 'bottom'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        chart.draw(data, options);
+    }
+
+    function loadChartData() {
+        var networkId = $("#wallet").val();
+        if (networkId == "") {
+            networkId = 0;
+        }
+        ajaxRequests.GET('@Url.RouteUrl("GetPieChartData")?networkId=' + networkId + '',
+            (response) => {
+                console.log(response);
+                if (response.length > 0) {
+                    chartData = [['Token', 'AmountInvested']];
+                    $.each(response, function (key, value) {
+                        chartData.push([value.token, value.amountInvested])
+                    });
+                    google.charts.load("current", { packages: ["corechart"] });
+                    google.charts.setOnLoadCallback(drawChart);
+                }
+            },
+            (error) => {
+                console.log(error);
+            })
+    }
+</script>

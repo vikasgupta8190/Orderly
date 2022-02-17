@@ -1,0 +1,111 @@
+﻿@model OTCModel
+@{
+    ViewBag.Title = "OTC";
+    Layout = "~/Views/Shared/_AuthorizeLayout.cshtml";
+    bool view = ViewBag.ViewModeEnable == null ? false : ViewBag.ViewModeEnable;
+}
+<div class="center_panel">
+    @await Html.PartialAsync("_Notifications")
+    <div class="container cus_container">
+        <div class="upper_heading">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h4 class="common_heading">@T("OTC")</h4>
+                </div>
+                    <div class="col-md-6">
+                        <ul class="all_wallets">
+                            <li>
+                                <a href="javascript:void(0)"
+                                   class="common_btn" id="addOTCBtn"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#otcModal">@T("AddNewOTC")</a>
+                            </li>
+                        </ul>`
+                    </div>
+            </div>
+        </div>
+
+        <div class="table_bg contact_table" id="table_contacts">
+            <div class="table-responsive">
+                @await Html.PartialAsync("GridTable", new DataTablesModel()
+           {
+               Name = "OTC-list",
+               Length = OrderlyDefaults.GridDefaultPageSize,
+               LengthMenu = OrderlyDefaults.AvailableGridPageSize,
+               UrlRead = Url.RouteUrl("GetOTC"),
+               SearchButtonId = "search-contact",
+               ColumnCollection = new List<ColumnProperty>()
+           {
+               new ColumnProperty("type")
+               {
+                   Title = "Type",
+                   Width = "50",
+                   ClassName="text-capitalize"
+               },
+               new ColumnProperty("tokenName")
+               {
+                   Title = "Token",
+                   Width = "100",
+                   Render= new RenderCustom("renderTokenName")
+               },
+               new ColumnProperty("tokenQty")
+               {
+                   Title = "Token Amount",
+                   Width = "100",
+                   ClassName="text-start"
+               },new ColumnProperty("pricePerToken")
+               {
+                   Title = "Unit Price",
+                   Width = "100",
+                   ClassName="text-start"
+               },new ColumnProperty("totalAmount")
+               {
+                   Title = "Total",
+                   Width = "100",
+                   ClassName="text-start"
+               },new ColumnProperty("currency")
+               {
+                   Title = "Preferred Currency",
+                   Width = "100",
+                   ClassName="text-start"
+               }, new ColumnProperty("id")
+               {
+                   Title="",
+                   Width = "100",
+                   ClassName="text-start",
+                   Render=new RenderButtonView("","openInViewMode")
+               }
+               }
+           })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section RightPopup{
+    @await Html.PartialAsync("_AddOTC", Model)
+}
+<script type="text/javascript">
+    function openInViewMode(v) {
+        var id = $(v).attr('data-target');
+        window.location.href = "@Url.RouteUrl("GetOTCViewMode")?id=" + id + "";
+    }
+
+    function renderTokenName(data, type, row, meta) {
+        var html = "<span class='pointer' onclick = VerifyToken('" + row.tokenAddress +"','"+ row.networkUrl +"')>" + data + "</span>";
+        return html;
+    }
+
+    function VerifyToken(tokenAddress, networkUrl) {
+        var url = networkUrl + tokenAddress;
+        window.open(url, '_blank');
+    }
+    @if (view)
+    {
+        <text>
+    $(document).ready(function () {
+        $('#otcModal').modal('show');
+    });
+        </text>
+    }
+</script>

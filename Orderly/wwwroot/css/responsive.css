@@ -1,0 +1,100 @@
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (max-width: 1199px) {
+  .welcome_page .welcome_left {
+    padding: 160px 40px 40px 40px;
+  }
+  .outer_column .single_column {
+    padding: 25px 15px 30px 15px;
+  }
+
+  .welcome_page .welcome_left.create_account {
+    padding-top: 160px !important;
+  }
+  .outer_panel .right_panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin-right: -250px;
+  }
+  .outer_panel .slide_right_panel {
+    margin-right: 0;
+  }
+  .outer_panel .left_panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    margin-left: -235px;
+  }
+
+  .cus_ham {
+    display: block;
+  }
+
+  .outer_panel .left_panel.slide_left_panel {
+    margin-left: 0;
+  }
+  .center_panel {
+    padding: 0 36px 0 70px;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .welcome_page .welcome_left {
+    padding: 255px 40px 40px 40px;
+  }
+  .welcome_page .welcome_left.create_account {
+    padding-top: 350px !important;
+  }
+  /* setup portfolio 12-11-21 css start*/
+  .setup_portfolio .sp_cards .sp_cards_inner {
+    padding: 15px 25px;
+  }
+  .setup_portfolio .sp_search h4 {
+    font-size: 16px;
+  }
+  /* setup portfolio 12-11-21 css end*/
+}
+
+@media only screen and (min-width: 992px) {
+  .cus_container {
+    max-width: 925px;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+}
+
+@media only screen and (max-width: 767px) {
+  .welcome_page .welcome_right {
+    padding: 100px 40px;
+  }
+  /* setup portfolio 12-11-21 css start*/
+
+  .setup_portfolio .sp_search h4 {
+    margin-bottom: 15px;
+  }
+  .setup_bottom_fixed h6 {
+    margin-bottom: 15px;
+    text-align: right;
+  }
+  .setup_bottom_fixed {
+    padding: 15px 0;
+  }
+  .setup_portfolio .sp_cards {
+    padding-bottom: 135px;
+  }
+  .cus_address_add_modal .cus_save {
+    width: 140px;
+  }
+  .cus_address_add_modal .cus_cancel {
+    width: 140px;
+  }
+  h4.common_heading {
+    margin-bottom: 20px;
+  }
+  /* setup portfolio 12-11-21 css end*/
+}

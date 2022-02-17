@@ -1,0 +1,637 @@
+﻿@model UserInvestmentModel
+<form asp-action="Index" id="new-investment" asp-controller="Investment" method="post">
+    <div class="modal fade cus_right_modal cus_address_add_modal add_new_investment"
+         id="investmentModal"
+         tabindex="-1"
+         data-bs-backdrop="static"
+         data-bs-keyboard="false"
+         aria-labelledby="investmentModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x => x.UniqueInvestmentId)
+                @Html.HiddenFor(x => x.Disributions)
+                @Html.HiddenFor(x => x.InvestmentQuantity)
+
+                <div class="modal-header">
+                    <h4 class="common_heading">@T("AddNewInvestment")</h4>
+                    <button type="button"
+                            class="btn"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <svg width="24"
+                             height="24"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M5.57999 5.57998C5.79092 5.36931 6.07686 5.25097 6.37499 5.25097C6.67311 5.25097 6.95904 5.36931 7.16999 5.57998L12 10.41L16.83 5.57998C16.933 5.46945 17.0572 5.3808 17.1952 5.31931C17.3332 5.25783 17.4822 5.22477 17.6332 5.2221C17.7843 5.21943 17.9343 5.24722 18.0744 5.3038C18.2145 5.36038 18.3417 5.44459 18.4485 5.55142C18.5554 5.65825 18.6396 5.78551 18.6961 5.92558C18.7527 6.06567 18.7806 6.21571 18.7779 6.36676C18.7752 6.51783 18.7422 6.66679 18.6807 6.80479C18.6192 6.94279 18.5305 7.06699 18.42 7.16998L13.59 12L18.42 16.83C18.5305 16.933 18.6192 17.0572 18.6807 17.1952C18.7422 17.3332 18.7752 17.4822 18.7779 17.6332C18.7806 17.7843 18.7527 17.9343 18.6961 18.0744C18.6396 18.2145 18.5554 18.3417 18.4485 18.4485C18.3417 18.5554 18.2145 18.6396 18.0744 18.6961C17.9343 18.7527 17.7843 18.7806 17.6332 18.7779C17.4822 18.7752 17.3332 18.7422 17.1952 18.6807C17.0572 18.6192 16.933 18.5305 16.83 18.42L12 13.59L7.16999 18.42C6.95672 18.6187 6.67464 18.7269 6.38319 18.7218C6.09174 18.7165 5.81367 18.5985 5.60754 18.3924C5.40143 18.1863 5.28336 17.9082 5.27822 17.6167C5.27307 17.3253 5.38127 17.0433 5.57999 16.83L10.41 12L5.57999 7.16998C5.36931 6.95905 5.25098 6.67311 5.25098 6.37498C5.25098 6.07686 5.36931 5.79093 5.57999 5.57998Z"
+                                  fill="#24292E" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="sub_heading">@T("General")</h5>
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.NetworkId, new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.NetworkId, Model.AvailableNetworks, new { @class = "form-select" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.NetworkId, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.InvestedAmount, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.InvestedAmount, new { @class = "form-control", @readonly = "readonly", placeholder = "$200", type = "number", min = "0" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.InvestedAmount, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.NumberOfToken, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.NumberOfToken, new { @class = "form-control", placeholder = "2", type = "number", min = "1" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.NumberOfToken, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.InvestmentTransactionLink, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.InvestmentTransactionLink, new { @class = "form-control", placeholder = "9188jaklz0918a-jz08180z5" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.InvestmentTransactionLink, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.FromAddress, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.FromAddress, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.Sign, new { @class = "form-label" })
+                        <span>&nbsp;&nbsp;(@Html.CheckBoxFor(x => x.SignManually, new { @class = "form-check-input", id = "chkManually" })<label class="form-label">Enter Manually</label>)</span>
+                        @Html.TextBoxFor(x => x.Sign, new { @class = "form-control d-none", placeholder = "Enter Name" })
+                        <div id="contact">@Html.DropDownListFor(x => x.ContactId, Model.AvailableContact, new { @class = "form-select fstdropdown-select" })</div>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Sign, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.CustomLink, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.CustomLink, new { @class = "form-control", placeholder = "Custom Link" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.CustomLink, "", new { @class = "text-danger validation" })
+
+                    <h5 class="sub_heading middle_heading">@T("VestingDetails")</h5>
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.VestingLockup, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.VestingLockup, new { @class = "form-control", placeholder = "$200", type = "number", min = "0" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.VestingLockup, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.VestingTokenPercentage, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.VestingTokenPercentage, new { @class = "form-control", placeholder = "$200", type = "number", min = "0" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.VestingTokenPercentage, "", new { @class = "text-danger validation" })
+
+
+                    <h5 class="sub_heading middle_heading">@T("DistributionType")</h5>
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.DistributionPortal, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.DistributionPortal, new { @class = "form-control", placeholder = "Distribution Portal" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.DistributionPortal, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.DistributionTypeId, new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.DistributionTypeId, Model.AvailableDistributionTypes, new { @class = "form-select" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.DistributionTypeId, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field add_distributions_table d-none" id="availabledisributions">
+                        <div>
+                            <table class="table table-responsive">
+                            </table>
+                        </div>
+                    </div>
+                    <a href="javascript:void(0)" class="common_btn schedule_btn d-none">@T("ConstructSchedule")</a>
+
+                    <div class="" id="distributionTypeDiv" style="display:none">
+                        <div class="distribution_dropdowns">
+                            <h3>Heading</h3>
+                            <div class="row gy-4">
+                                <div class="col-md-12 lockup d-none">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="cus_field">
+                                                <div class="">
+                                                    <label for="lockup_dropdown" class="form-label">@T("Lockup")</label>
+                                                    <select id="lockup_dropdown" class="form-select">
+                                                        @for (int i = 1; i <= 100; i++)
+                                                        {
+                                                            <option value="@i">@i %</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="cus_field lockup d-none">
+                                                <div class="">
+                                                    <label for="lockupDuration_dropdown" class="form-label">@T("LockupDuration")</label>
+                                                    <select id="lockupDuration_dropdown" class="form-select">
+                                                        <option value="@T("DayValue")">@T("Days")</option>
+                                                        <option value="@T("MonthValue")">@T("Months")</option>
+                                                        <option value="@T("YearValue")">@T("Years")</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="cus_field">
+                                                <label for="tge_dropdown" class="form-label">TGE</label>
+                                                <select id="tge_dropdown" class="form-select">
+                                                    @for (int i = 1; i <= 100; i++)
+                                                    {
+                                                        <option value="@i">@i %</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 schedule d-none"></div>
+                            </div>
+                        </div>
+
+                        <a href="javascript:void(0)" class="add_address" id="add-lockup">@T("AddLockupWithPlusSign")</a>
+                        <a href="javascript:void(0)" class="add_address d-none" id="remove-lockup">@T("RemoveLockupWithMinusSign")</a>
+                        <a href="javascript:void(0)" class="add_address" id="add-schedule">@T("AddScheduleWithMinusSign")</a>
+                        <a href="javascript:void(0)" class="add_distribution add_address" id="add-distribution">@T("AddWithMinusSign")</a>
+
+                        <div id="schedule-html" class="d-none">
+                            <div class="row schedule-percentage">
+                                <div class="col-md-5">
+                                    <div class="cus_field">
+                                        <div class="">
+                                            <label for="period_dropdown" class="form-label">@T("Period")</label>
+                                            <select id="period_dropdown" class="form-select">
+                                                @for (int i = 1; i <= 12; i++)
+                                                {
+                                                    <option value="@i">@i</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="cus_field">
+                                        <div class="">
+                                            <label for="token_percentage_dropdown" class="form-label">Percent tokens</label>
+                                            <select id="token_percentage_dropdown" class="form-select token-percentage">
+                                                @for (int i = 1; i <= 100; i++)
+                                                {
+                                                    <option value="@i">@i %</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="javascript:void(0)" onclick="removeSchedule(this)"><svg class="remove_schedule_svg" width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 1C15.7 1.4 5.83333 14.5 1 21M1 1L16.5 21" stroke="black" /></svg></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 class="sub_heading middle_heading">@T("InvestmentType")</h5>
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.InvestmentTypeId, new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.InvestmentTypeId, Model.AvailableInvestmentTypes, new { @class = "form-select" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.InvestmentTypeId, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field individual-address">
+                        @Html.LabelFor(x => x.Address, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.Address, new { @class = "form-control", placeholder = "3454345Qw53Vcx3999CX5344EW534 Myself", onblur = "getContact(this)" })
+                        <input type="hidden" class="form-control contactid" id="individualContactId" name="contactId" />
+                    </div>
+
+                    <div class="shared-address d-none">
+                        <div class="cus_field col-12 shared-html">
+                            <div class="row contactdetails" id="sharedInfo1">
+                                <div class="col-5">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control contactName" onblur="getContact(this)" />
+                                    <input type="hidden" class="form-control contactid" id="contactId" name="contactId" />
+                                </div>
+                                <div class="col-5 ml-5">
+                                    <label class="form-label">Percentage</label>
+                                    <input type="number" class="form-control sharedPercentage" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <span><button type="button" id="btnSharedAddress" onclick="addMultiAddressFields()">@T("AddAddressWithPlusSign")</button></span>
+                        </div>
+                    </div>
+
+                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger validation" })
+
+                    <h5 class="sub_heading middle_heading">@T("About")</h5>
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.SaftFile, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.SaftFile, "", new { type = "file", accept = "application/pdf" })
+                    </div>
+                    <span class="saft-file" onclick="downloadSaftFile('@Model.Id')">@Model.SaftFile</span>
+                    @Html.ValidationMessageFor(m => m.SaftFile, "", new { @class = "text-danger validation" })
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.WebsiteLink, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.WebsiteLink, new { @class = "form-control", placeholder = "bitcoin.org" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.WebsiteLink, "", new { @class = "text-danger validation" })
+                    <h5 class="sub_heading middle_heading">@T("About")</h5>
+
+                    <div class="cus_field">
+                        @Html.LabelFor(x => x.TokenId, new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.TokenId, Model.AvailableToken, "Select Token", new { @class = "form-select" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.TokenId, "", new { @class = "text-danger validation" })
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn cus_cancel"
+                            data-bs-dismiss="modal">
+                        @T("Cancel")
+                    </button>
+                    <button type="submit" class="btn cus_save">@T("Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+        var dynamicId = 6; //static for now
+
+    $(document).ready(function () {
+        var numberOfToken = parseInt($("#NumberOfToken").val());
+        if (isNaN(numberOfToken)) {
+            numberOfToken = 0;
+        }
+        if (numberOfToken == 0) {
+            $("#NumberOfToken").val(1);
+        }
+
+         $('.multiselect').kendoMultiSelect({
+                        animation: {
+                            open: {
+                                effects: "zoom:in",
+                                duration: 300
+                            }
+                        }
+                    });
+
+        $("#InvestmentTypeId").change(function () {
+            var investmentvalue = parseInt($(this).val());
+            if (isNaN(investmentvalue)) { investmentvalue = 0; }
+            if (investmentvalue == 2) {
+                if (!$(".individual-address").hasClass("d-none")) {
+                    $(".individual-address").addClass("d-none");
+                }
+                if ($(".shared-address").hasClass("d-none")) {
+                    $(".shared-address").removeClass("d-none");
+                }
+            } else {
+                if ($(".individual-address").hasClass("d-none")) {
+                    $(".individual-address").removeClass("d-none");
+                }
+                if (!$(".shared-address").hasClass("d-none")) {
+                    $(".shared-address").addClass("d-none");
+                }
+            }
+        });
+
+        if ($("#DistributionTypeId").val() == dynamicId) {
+            $(".schedule_btn").removeClass("d-none");
+            $('#distributionTypeDiv').addClass('visible').show();
+            if ('@Model.DistributionType' != "") {
+                var distributionType = @Html.Raw(Json.Serialize(Model.DistributionType));
+                console.log(distributionType);
+                $('#availabledisributions').removeClass("d-none");
+                $('#availabledisributions table').html('<tr><th>TGE</th><th>Lockup</th><th>Lockup Duration</th><th>Period</th><th>Percent tokens</th><th></th></tr>');
+                $.each(distributionType, function (index, item) {
+                    if (index == 0) {
+                        $('#availabledisributions table').append('<tr><td>' + item.tge + '%</td><td>' + item.lockup + '%</td><td>' + item.lockupDuration + '</td><td>' + item.peroid + ' Month</td><td>' + item.tokenPercentage + '%</td><td class="text-end"><a href="javascript:void(0)" class="distribution_remove" onclick="removeDistribution(this)" class=""><svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 1C15.7 1.4 5.83333 14.5 1 21M1 1L16.5 21" stroke="black"/></svg></a></td></tr>');
+                    } else {
+                        $('#availabledisributions table').append('<tr><td></td><td></td><td></td><td>' + item.peroid + ' Month</td><td>' + item.tokenPercentage + '%</td><td class="text-end"></td></tr>');
+                    }
+                });
+            }
+        }
+
+        if ('@Model.InvestmentTypeId' == 2) {
+            if (!$(".individual-address").hasClass("d-none")) {
+                $(".individual-address").addClass("d-none");
+            }
+            if ($(".shared-address").hasClass("d-none")) {
+                $(".shared-address").removeClass("d-none");
+            }
+            if ('@Model.SharedInvestmentPersonDetail' != "") {
+                var sharedDetails = @Html.Raw(Json.Serialize(Model.SharedInvestmentPersonDetail));
+                console.log(sharedDetails);
+                $.each(sharedDetails, function (index, item) {
+                    var rowNumber = parseInt(index);
+                    if (isNaN(rowNumber)) { rowNumber = 0; } else { rowNumber = rowNumber + 1; }
+                    if (index > 0) {
+                        addMultiAddressFields();
+                    }
+                    $("#sharedInfo" + rowNumber).children().find("input.contactid").val(item.contactId);
+                    $("#sharedInfo" + rowNumber).children().find("input.contactName").val(item.contactName);
+                    $("#sharedInfo" + rowNumber).children().find("input.sharedPercentage").val(item.sharedPercentage);
+                });
+            }
+        } else {
+            if ('@Model.SharedInvestmentPersonDetail' != "") {
+                var sharedDetails = @Html.Raw(Json.Serialize(Model.SharedInvestmentPersonDetail));
+                $.each(sharedDetails, function (index, item) {
+                    $("#individualContactId").val(item.contactId);
+                    $("#Address").val(item.contactName);
+                });
+            }
+        }
+
+        $("#chkManually").change(function () {
+            if ($(this).is(":checked")) {
+                if ($("#Sign").hasClass("d-none")) {
+                    $("#Sign").removeClass("d-none");
+                }
+                console.log("test");
+                if (!$("#contact").hasClass("d-none")) {
+                    $("#contact").addClass("d-none");
+                }
+            } else {
+                if (!$("#Sign").hasClass("d-none")) {
+                    $("#Sign").val("");
+                    $("#Sign").addClass("d-none");
+                }
+
+                if ($("#contact").hasClass("d-none")) {
+                    $("#contact").removeClass("d-none");
+                }
+            }
+        });
+    });
+
+        $('#@Html.IdFor(x=>x.DistributionTypeId)').on('change', function () {
+            var distributionTypeId = $(this).val();
+            if (distributionTypeId == dynamicId) {
+                $(".schedule_btn").removeClass("d-none");
+            } else {
+                $(".schedule_btn").addClass("d-none")
+            }
+        })
+
+        $(".schedule_btn").click(function () {
+            $('#distributionTypeDiv').addClass('visible').show();
+        });
+
+        $("#add-lockup").click(function () {
+            $("#add-lockup").addClass("d-none");
+            $(".lockup").removeClass("d-none");
+            $("#remove-lockup").removeClass("d-none");
+        });
+
+        $("#remove-lockup").click(function () {
+            $("#add-lockup").removeClass("d-none");
+            $("#remove-lockup").addClass("d-none");
+            $(".lockup").addClass("d-none");
+        });
+
+        $("#add-schedule").click(function () {
+            $(".schedule").append($("#schedule-html").html());
+            if ($(".schedule").hasClass("d-none")) {
+                $(".schedule").removeClass("d-none");
+            }
+        });
+
+        $('.add_distribution').on('click', function () {
+            var sumOfTokenPercentage = 0;
+            $(".schedule").find(".token-percentage").each(function (obj, sch) {
+                var percentage = parseInt($(this).val());
+                if (isNaN(percentage)) { percentage = 0; }
+                sumOfTokenPercentage += percentage;
+            });
+
+            if (sumOfTokenPercentage == 100) {
+                var trLength = $(".add_distributions_table table tr").length;
+                if (trLength < 2) {
+                    $('#availabledisributions').removeClass("d-none");
+                    if ($('#availabledisributions table').children('tr').length <= 0) {
+                        $('#availabledisributions table').html('<tr><th>TGE</th><th>Lockup</th><th>Lockup Duration</th><th>Period</th><th>Percent tokens</th><th></th></tr>')
+                    }
+                    var tge = $('#tge_dropdown').val() + '%';
+                    if (!$(".lockup ").hasClass("d-none")) {
+                        var lockup = $('#lockup_dropdown').val() + '%';
+                        var lockupDuration = $('#lockupDuration_dropdown').val();
+                    } else {
+                        var lockup = "";
+                        var lockupDuration = "";
+                    }
+                    if (!$(".schedule ").hasClass("d-none")) {
+                        $(".schedule").find(".schedule-percentage").each(function (index, val) {
+                            var period = $(this).find("#period_dropdown").val() + ' Month';
+                            var tokenPercent = $(this).find("#token_percentage_dropdown").val() + '%';
+                            if (index == 0) {
+                                $('#availabledisributions table').append('<tr><td>' + tge + '</td><td>' + lockup + '</td><td>' + lockupDuration + '</td><td>' + period + '</td><td>' + tokenPercent + '</td><td class="text-end"><a href="javascript:void(0)" class="distribution_remove" onclick="removeDistribution(this)" class=""><svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 1C15.7 1.4 5.83333 14.5 1 21M1 1L16.5 21" stroke="black"/></svg></a></td></tr>');
+                            } else {
+                                $('#availabledisributions table').append('<tr><td></td><td></td><td></td><td>' + period + '</td><td>' + tokenPercent + '</td><td class="text-end"></td></tr>');
+                            }
+                        });
+                    } else {
+                        var tokenPercent = "";
+                        var period = "";
+                        $('#availabledisributions table').append('<tr><td>' + tge + '</td><td>' + lockup + '</td><td>' + lockupDuration + '</td><td>' + period + '</td><td>' + tokenPercent + '</td><td class="text-end"><a href="javascript:void(0)" class="distribution_remove" onclick="removeDistribution(this)" class=""><svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 1C15.7 1.4 5.83333 14.5 1 21M1 1L16.5 21" stroke="black"/></svg></a></td></tr>');
+                    }
+                } else {
+                    alert("You can construct only 1 schedule.");
+                }
+            } else {
+                alert("Sum of percentage token should be 100.");
+            }
+        })
+
+        function removeDistribution(v) {
+            $("#availabledisributions table").find("tr:gt(0)").remove();
+        }
+
+        function removeSchedule(obj) {
+            $(obj).parents().eq(1).remove();
+        }
+
+    $('#new-investment').submit(function (e) {
+        e.preventDefault()
+        var url = $(this).attr('action');
+        var distributions = [];
+        var count = 0;
+        var tge = 0;
+        var lockup = 0;
+        var lockupDuration = "";
+        var id = parseInt($("#Id").val());
+        if (isNaN(id)) { id = 0; }
+        $('#availabledisributions table tr').each(function () {
+            if ($(this).children('td').length > 0) {
+                if (count == 0) {
+                    tge = $(this).children('td')[0].innerHTML.replace('%', '');
+                    lockup = $(this).children('td')[1].innerHTML.replace('%', '');
+                    lockupDuration = $(this).children('td')[2].innerHTML;
+                }
+                var peroid = $(this).children('td')[3].innerHTML.replace('Month', '');
+                var token = $(this).children('td')[4].innerHTML.replace('%', '');
+                distributions.push({
+                    Id: id,
+                    TGE: tge,
+                    Peroid: peroid,
+                    Lockup: lockup,
+                    LockupDuration: lockupDuration,
+                    TokenPercentage: token
+                });
+                count = count + 1;
+            }
+        });
+        $('#@Html.IdFor(x=>x.Disributions)').val(JSON.stringify(distributions));
+
+        var investmentType = parseInt($("#InvestmentTypeId").val());
+        if (isNaN(investmentType)) { investmentType = 0; }
+        var sharedConatctDetails = [];
+        if (investmentType == 2) {
+            $('.contactdetails').each(function () {
+                var contactId = parseInt($(this).find(".contactid").val());
+                if (isNaN(contactId)) { contactid = 0; }
+                var sharedPercentage = parseFloat($(this).find(".sharedPercentage").val());
+                if (isNaN(sharedPercentage)) { sharedPercentage = 0; }
+                if (contactId > 0 && sharedPercentage > 0) {
+                    sharedConatctDetails.push({
+                        contactId: contactId,
+                        sharedPercentage: sharedPercentage
+                    });
+                }
+            });
+        } else {
+            var contactId = parseInt($("#individualContactId").val());
+            if (isNaN(contactId)) { contactId = 0; }
+            sharedConatctDetails.push({
+                contactId: contactId,
+                sharedPercentage: 100
+            });
+        }
+        console.log(JSON.stringify(sharedConatctDetails));
+        $("#Address").val(JSON.stringify(sharedConatctDetails));
+
+        ajaxRequests.POST(url, $(this).serialize(), (response) => {
+            if (!response.success) {
+                orderlyNotification.getNotificaitonHtml();
+                $(response.error).each(function () {
+                    console.log(this);
+                })
+            } else {
+                var fileUpload = $("#SaftFile").get(0);
+                var files = fileUpload.files;
+                if (files.length > 0) {
+                    var data = new FormData();
+                    data.append(files[0].name, files[0]);
+                    var uploadUrl = '@Url.RouteUrl("UploadSaftFile")?id=' + response.id
+                    addAntiForgeryToken(data);
+                    $.ajax({
+                        type: "POST",
+                        url: uploadUrl,
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        async: false,
+                        success: function (message) {
+                            refreshGrid();
+                        },
+                        error: function () {
+                        },
+                    });
+                } else {
+                    refreshGrid();
+                }
+            }
+        })
+    });
+
+        $('#@Html.IdFor(x=>x.InvestmentTransactionLink)').on('focusout', function () {
+            var transactionLink = $.trim($('#@Html.IdFor(x=>x.InvestmentTransactionLink)').val());
+            if (transactionLink.length > 0) {
+                ajaxRequests.POST('@Url.RouteUrl("TransactionLinkVerification")', { transactionLink: '' + transactionLink + '', networkId: $('#@Html.IdFor(x=>x.NetworkId)').val() },
+                    (response) => {
+                        $('span[data-valmsg-for="@Html.IdFor(x=>x.InvestmentTransactionLink)"]').html('')
+                        if (!response.success) {
+                            orderlyNotification.getNotificaitonHtml();
+                            $('span[data-valmsg-for="@Html.IdFor(x=>x.InvestmentTransactionLink)"]').html(response.message);
+                        }
+                        $("#InvestedAmount").val(response.value);
+                        $("#InvestmentQuantity").val(response.investmentQuantity);
+                        $("#FromAddress").val(response.fromAddress);
+                    }
+                )
+            }
+        });
+
+        function refreshGrid() {
+            if ($.trim($("#UniqueInvestmentId").val()).length == 0) {
+                $('.modal-footer .btn.cus_cancel').click()
+                refresh_investment_grid();
+                orderlyNotification.getNotificaitonHtml();
+            } else {
+                orderlyNotification.getNotificaitonHtml();
+                setTimeout(function () { window.location.reload(); }, 3000);
+            }
+        }
+
+        function downloadSaftFile(id) {
+            //var url = "/Investment/DownloadSaftFile";
+            //ajaxRequests.POST(url, { id : id }, (response) => {
+            //    if (response.success) {
+
+            //    }
+            //});
+            window.location.href = "/Investment/DownloadSaftFile?id=" + id;
+    }
+
+    function addMultiAddressFields() {
+        var html = $('.shared-html .row').first().html();
+        var rowNumber = $(".shared-html").find(".contactdetails").length + 1;
+        $('.shared-html .row').last().after('<div class="row contactdetails" id="sharedInfo' + rowNumber  +'">' + html +
+            '<div class="col-2"><button onclick="removeAddress(this)" type="button" class="btn" aria-label="Close">'
+            + '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">'
+            + '<path fill-rule="evenodd" clip-rule="evenodd" d="M5.57999 5.57998C5.79092 5.36931 6.07686 5.25097 6.37499 5.25097C6.67311 5.25097 6.95904 5.36931 7.16999 5.57998L12 10.41L16.83 5.57998C16.933 5.46945 17.0572 5.3808 17.1952 5.31931C17.3332 5.25783 17.4822 5.22477 17.6332 5.2221C17.7843 5.21943 17.9343 5.24722 18.0744 5.3038C18.2145 5.36038 18.3417 5.44459 18.4485 5.55142C18.5554 5.65825 18.6396 5.78551 18.6961 5.92558C18.7527 6.06567 18.7806 6.21571 18.7779 6.36676C18.7752 6.51783 18.7422 6.66679 18.6807 6.80479C18.6192 6.94279 18.5305 7.06699 18.42 7.16998L13.59 12L18.42 16.83C18.5305 16.933 18.6192 17.0572 18.6807 17.1952C18.7422 17.3332 18.7752 17.4822 18.7779 17.6332C18.7806 17.7843 18.7527 17.9343 18.6961 18.0744C18.6396 18.2145 18.5554 18.3417 18.4485 18.4485C18.3417 18.5554 18.2145 18.6396 18.0744 18.6961C17.9343 18.7527 17.7843 18.7806 17.6332 18.7779C17.4822 18.7752 17.3332 18.7422 17.1952 18.6807C17.0572 18.6192 16.933 18.5305 16.83 18.42L12 13.59L7.16999 18.42C6.95672 18.6187 6.67464 18.7269 6.38319 18.7218C6.09174 18.7165 5.81367 18.5985 5.60754 18.3924C5.40143 18.1863 5.28336 17.9082 5.27822 17.6167C5.27307 17.3253 5.38127 17.0433 5.57999 16.83L10.41 12L5.57999 7.16998C5.36931 6.95905 5.25098 6.67311 5.25098 6.37498C5.25098 6.07686 5.36931 5.79093 5.57999 5.57998Z" fill="#24292E"></path>'
+            + '</svg></button></div>'+'</div>');
+    }
+    function removeAddress(obj) {
+        if (confirm("@T("DeleteConfirmationMessage")")) {
+            $(obj).parent().parent().remove();
+        }
+    }
+
+    function getContact(obj) {
+        var address = $.trim($(obj).val());
+        if (address.length > 0) {
+            ajaxRequests.POST('@Url.RouteUrl("GetContactDetails")', { address: address }, (response) => {
+            if (!response.success) {
+                orderlyNotification.getNotificaitonHtml();
+                $(obj).val("");
+            } else {
+                if (response.id > 0) {
+                    $(obj).parent().find(".contactid").val(response.id);
+                    $(obj).val(response.name);
+                }
+            }
+        });
+        }
+
+    }
+</script>
